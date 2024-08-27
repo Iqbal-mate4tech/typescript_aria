@@ -1,0 +1,50 @@
+.master-body {
+    margin: 3px;
+    background-color: #f2f2f2;
+}
+
+.master-height {
+    height: 97%;
+}
+
+.row-data ion-row:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.master-modal .modal-wrapper.sc-ion-modal-md {
+    width: 30%;
+    min-width: 336px;
+    height: 40%;
+}
+
+.user-master-modal .modal-wrapper.sc-ion-modal-md {
+    width: 30%;
+    min-width: 336px;
+    height: 60%;
+}
+
+.master-modal ion-input,
+.user-master-modal ion-input {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    height: 30px;
+    background-color: #ffffff;
+    font-size: 12px;
+    color: #000000;
+}
+
+.user-master-modal ion-select {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    height: 30px;
+    background-color: #ffffff;
+    font-size: 12px;
+    color: #000000;
+    display: inline-flex;
+    --padding-top: 5px;
+    --padding-bottom: 0px;
+}
