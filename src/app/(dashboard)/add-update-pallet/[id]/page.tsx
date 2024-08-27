@@ -1,29 +1,29 @@
-// src/pages/pallet/[id].tsx
-"use client"
+"use client";
+
 import React, { useState, useEffect } from 'react';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import * as XLSX from 'xlsx';
-import { useRouter ,useParams} from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   Card, CardContent, CardHeader, Typography, Grid, Button, TextField, Select, MenuItem, InputLabel, IconButton, Fab, Dialog, DialogTitle, DialogContent, DialogActions, Tooltip, Snackbar, Alert
 } from '@mui/material';
 import { Add, Delete, Edit } from '@mui/icons-material';
-import {
-    addUpdatePalletsMasterDataAction, addItemToListAction, unMountAddUpdateData,
-    savePalletAction, palletItemsAction, updatePalletAction, receivedPalletItemsAction, updatePalletFormData, getItemDescriptionAction, getITODetailsAction
-} from '../../pallet/action';
-import  AppHeader  from '@/components/app-header';
-import  SingleSelect  from '@/components/single-select';
-import  PalletItemModal  from '@/components/pallet-item-modal';
-import  ReceiveItemModal  from '@/components/receive-item-modal';
-import  DirectToStore  from '@/components/direct-to-store';
+
+import AppHeader from '@/components/app-header';
+import SingleSelect from '@/components/single-select';
+import PalletItemModal from '@/components/pallet-item-modal';
+import ReceiveItemModal from '@/components/receive-item-modal';
+import DirectToStore from '@/components/direct-to-store';
 import { AppAlert } from '@/components/app-alert';
-import { getUtcDateTime, hasPermission, isValidStatusToChange, getUserStore,
-     getVariance, setItemStatusColor } from '../../../../shared/common';
+import { getUtcDateTime, hasPermission, isValidStatusToChange, getUserStore, getVariance, setItemStatusColor } from '../../../../shared/common';
 import { webUrl } from '../../../../shared/constants';
 import useAuth from '@/components/withAuth';
+
+import {
+  addUpdatePalletsMasterDataAction, addItemToListAction, unMountAddUpdateData, savePalletAction, palletItemsAction, updatePalletAction, receivedPalletItemsAction, updatePalletFormData, getItemDescriptionAction, getITODetailsAction
+} from '../../pallet/action';
 
 const AddUpdatePallet = () => {
   const isAuthenticated = useAuth(); // Check if the user is authenticated
@@ -63,10 +63,11 @@ const AddUpdatePallet = () => {
       dispatch(addUpdatePalletsMasterDataAction());
       setInitialData();
     }
+
     return () => {
       dispatch(unMountAddUpdateData());
     };
-  }, [id, isAuthenticated]);
+  }, [id, isAuthenticated, dispatch]); // Added 'dispatch' and 'setInitialData' to the dependency array
 
   const setInitialData = () => {
     if (id && pallets && pallets[0]) {
@@ -117,6 +118,7 @@ const AddUpdatePallet = () => {
       ...formData,
       [name]: value,
     });
+
     setTimeout(() => {
       onClickSave();
     }, 2000);
@@ -137,6 +139,7 @@ const AddUpdatePallet = () => {
     doc.text('Pallet Information', 20, 20);
     doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
+
     const idText = `Pallet ID: ${formData.id || 'N/A'}`;
     const storeName = `Store Name: ${getStoreName(formData.store) || 'N/A'}`;
     doc.text(idText, 20, 40);
@@ -184,7 +187,6 @@ const AddUpdatePallet = () => {
     ];
 
     const wb = XLSX.utils.book_new();
-
     const ws1 = XLSX.utils.aoa_to_sheet(palletInfoData);
     ws1['!cols'] = [{ wch: 20 }, { wch: 30 }];
     ws1['!rows'] = palletInfoData.map(() => ({ hpx: 20 }));
@@ -234,6 +236,7 @@ const AddUpdatePallet = () => {
     } else {
       dispatch(addItemToListAction(itemData));
     }
+
     closeModal();
   };
 
@@ -252,6 +255,7 @@ const AddUpdatePallet = () => {
     if (formData.id && formData.id > 0 && !isValidStatusToChange(formData.status, formData.currentStatus)) {
       setAlertMessage(`You cannot change status from "${formData.currentStatus}" to "${formData.status}"`);
       setShowAlert(true);
+      
       return;
     }
 
@@ -442,6 +446,7 @@ const AddUpdatePallet = () => {
       );
       dispatch(receivedPalletItemsAction(_palletItems));
     }
+
     closeModal();
   };
 

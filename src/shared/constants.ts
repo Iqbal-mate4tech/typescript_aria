@@ -3,7 +3,7 @@ export const messages = {
 };
 
 export const apiUrl = {
-    baseApiUrl: 'https://cd68-2409-4054-11d-2421-6cbb-ee09-95f2-d769.ngrok-free.app',
+    baseApiUrl: 'https://9fee-2405-201-5509-e0dd-c4c2-deb8-88c6-76f2.ngrok-free.app',
     baseOdooApiUrl: 'https://test.askmonty.com.au/',
     userLogin: '/login',
     userLogout: '/userlogout',

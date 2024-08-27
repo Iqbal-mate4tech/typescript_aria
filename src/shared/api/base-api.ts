@@ -1,5 +1,6 @@
 import fetch from 'isomorphic-fetch';
-import { apiUrl } from '../constants';
+
+import { apiUrl } from '../constants'; // Separate import groups with a blank line
 
 // Define types for the default options
 interface RequestOptions extends RequestInit {
@@ -14,7 +15,7 @@ const defaultOptions: RequestOptions = {
   headers: {
     'Content-Type': 'application/json',
     'ngrok-skip-browser-warning': 'true', // Can be removed if not needed
-    'Access-Control-Allow-Credentials':'true',
+    'Access-Control-Allow-Credentials': 'true',
   },
   credentials: 'include', // Ensures cookies and other credentials are included
 };
@@ -50,12 +51,14 @@ export async function makeRequest<T = any>(uri: string, options: Partial<Request
       }
 
       const errorText = await response.text();
+
       throw new Error(`API Error: ${response.statusText} - ${errorText}`);
     }
 
     return response.json();
   } catch (error) {
     console.error('API Request Error:', error);
+
     throw error;
   }
 }
@@ -75,13 +78,17 @@ export async function makeOdooRequest<T = any>(uri: string, method: string = 'GE
     };
 
     const response = await fetch(`${apiUrl.baseOdooApiUrl}${uri}`, requestOptions);
+    
     if (!response.ok) {
       const errorText = await response.text();
+      
       throw new Error(`Odoo API Error: ${response.statusText} - ${errorText}`);
     }
+
     return response.json();
   } catch (error) {
     console.error('Odoo API Request Error:', error);
+    
     throw error;
   }
 }
@@ -99,13 +106,17 @@ export async function makeOdooPostRequest<T = any>(uri: string, data: any): Prom
     };
 
     const response = await fetch(`${apiUrl.baseOdooApiUrl}${uri}`, requestOptions);
+    
     if (!response.ok) {
       const errorText = await response.text();
+      
       throw new Error(`Odoo POST API Error: ${response.statusText} - ${errorText}`);
     }
+
     return response.json();
   } catch (error) {
     console.error('Odoo POST Request Error:', error);
+    
     throw error;
   }
 }
