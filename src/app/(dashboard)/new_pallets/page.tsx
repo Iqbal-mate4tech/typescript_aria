@@ -339,8 +339,11 @@
 
 "use client";
 
-import React, { useState, ClipboardEvent } from "react";
+import type { ClipboardEvent } from "react";
+import React, { useState } from "react";
+
 import { useRouter } from "next/navigation";
+
 import {
   Card,
   CardContent,
@@ -352,6 +355,7 @@ import {
 } from "@mui/material";
 import type { ConnectedProps } from "react-redux";
 import { connect } from "react-redux";
+
 import AppHeader from "../../../components/app-header";
 import {
   getITODescriptionAction,
@@ -400,6 +404,7 @@ type PalletNewProps = PropsFromRedux;
 const PalletNew: React.FC<PalletNewProps> = (props) => {
   const [toggle, setToggle] = useState<boolean>(false);
   const [ito, setIto] = useState<string | false>(false);
+
   const [alertMessage, setAlertMessage] = useState({
     show: false,
     msg: "",
@@ -407,11 +412,12 @@ const PalletNew: React.FC<PalletNewProps> = (props) => {
     btnCancelText: "",
     btnOkText: "",
   });
+
   const [poid, setPoid] = useState<string | false>(false);
   const [screen, setScreen] = useState<number>(1);
   const router = useRouter();
 
-  const handleKeyDown = (event: ClipboardEvent<HTMLDivElement>) => {
+  const handleKeyDown = (event: React.ClipboardEvent<HTMLDivElement>) => {
     event.preventDefault();
     const pasteValue = event.clipboardData.getData("Text");
 
@@ -439,6 +445,7 @@ const PalletNew: React.FC<PalletNewProps> = (props) => {
 
         if (result) {
           const cartonPicked = parseInt(result.CartonPicked || "0") + 1;
+
           const response_data = {
             CartonPicked: cartonPicked,
             ITOID: ito as string,
@@ -491,6 +498,7 @@ const PalletNew: React.FC<PalletNewProps> = (props) => {
 
         if (result) {
           const qtyReceived = parseInt(result.QtyReceived || "0") + 1;
+
           const response_data = {
             qtyReceived,
             poId: poid as string,
