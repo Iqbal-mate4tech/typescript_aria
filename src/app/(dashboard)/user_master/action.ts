@@ -1,5 +1,6 @@
-import { ThunkAction } from 'redux-thunk';
-import { Action } from 'redux';
+import type { ThunkAction } from 'redux-thunk';
+import type { Action } from 'redux';
+
 import { userLogin, appUsers, appUserType } from './service';
 
 // Define the structure of the user data
@@ -92,13 +93,15 @@ export const userLoginAction = (userData: UserLoginData): ThunkAction<Promise<bo
                 localStorage.setItem('isAuthenticated', 'true');
                 localStorage.setItem('userType', response[2].user_type);
                 localStorage.setItem('store', response[3].store_access_id);
-                return true;
+                
+return true;
             } else {
                 return false;
             }
         } catch (error) {
             dispatch(stopLoaderAction('userLogin'));
-            return false;
+            
+return false;
         }
     };
 };
@@ -118,6 +121,7 @@ export const usersAction = (): ThunkAction<void, {}, {}, UserActions> => {
 
         try {
             const response = await appUsers();
+
             dispatch(stopLoaderAction('appUsers'));
             dispatch(receivedUserAction(response));
         } catch (error) {
@@ -137,6 +141,7 @@ export const userTypeAction = (): ThunkAction<void, {}, {}, UserActions> => {
 
         try {
             const response = await appUserType();
+
             dispatch(stopLoaderAction('appUserType'));
             dispatch(receivedUserTypeAction(response));
         } catch (error) {

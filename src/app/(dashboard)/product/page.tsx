@@ -2,12 +2,15 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+
+import { useRouter } from 'next/navigation';
+
 import {
   Card, CardContent, Button, Typography, Grid, TextField, IconButton, Checkbox, InputLabel, Dialog, DialogActions, DialogContent, DialogTitle
 } from '@mui/material';
 import { FlashOn, FlashOff, Edit, ArrowBack, ArrowForward } from '@mui/icons-material';
-import { useRouter } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
+
 import { webUrl } from '@/shared/constants';
 import AppHeader from '@/components/app-header';
 import SingleSelect from '@/components/single-select';
@@ -60,6 +63,7 @@ const Product = () => {
 
   const getProductData = (page = 1, event?: any) => {
     const request = { page, ...formData };
+
     dispatch(productAction(request)).then(() => {
       if (event) event.target.complete();
       setIsAllChecked(false);
@@ -107,6 +111,7 @@ const Product = () => {
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
+
     if (files) {
       uploadFilesToS3(files);
     }
@@ -147,17 +152,20 @@ const Product = () => {
 
   const onProductChecked = (product: any, checked: boolean) => {
     let _products = [...productToSync];
+
     if (checked) {
       _products.push({ id: product.id, imageUrl: `${webUrl.linodeObjectUrl}${product.sku}.jpg` });
     } else {
       _products = _products.filter(p => p.id !== product.id);
     }
+
     setProductToSync(_products);
   };
 
   const productSync = () => {
     if (productToSync.length > 0) {
       const req = { ids: productToSync };
+
       dispatch(syncProductsAction(req)).then((response: any) => {
         if (response) {
           setProductToSync([]);
@@ -203,11 +211,13 @@ const Product = () => {
 
   const onAllChecked = (checked: boolean) => {
     setIsAllChecked(checked);
+
     if (checked) {
       const productsToSync = products.product.map((p: any) => ({
         id: p.id,
         imageUrl: `${webUrl.linodeObjectUrl}${p.sku}.jpg`
       }));
+
       setProductToSync(productsToSync);
     } else {
       setProductToSync([]);

@@ -1,16 +1,19 @@
 // src/components/app-header/index.tsx
 "use client"
 import React from 'react';
+
 import { useRouter } from 'next/navigation';
-import { AppBar, Toolbar, IconButton, Typography, Menu, MenuItem, Box, Button } from '@mui/material';
+
+import { AppBar, Toolbar, IconButton, Typography, Box } from '@mui/material';
 import {
-  Add as AddIcon, Home as HomeIcon, PowerSettingsNew as PowerIcon, Wallet as WalletIcon, 
-  Call as CallIcon, BusAlert as BusIcon, Person as PersonIcon, Album as AlbumIcon, 
-  Sync as SyncIcon, Upload as UploadIcon, AirplanemodeActive as AirplaneIcon, 
-  Bookmark as BookmarkIcon, People as PeopleIcon, FlashOn as FlashOnIcon, 
-  FlashOff as FlashOffIcon, BusinessCenter as BusinessCenterIcon, Refresh as RefreshIcon
+  Add as AddIcon, Home as HomeIcon, 
+  Call as CallIcon, BusAlert as BusIcon,  
+  Sync as SyncIcon, Upload as UploadIcon,  
+   FlashOn as FlashOnIcon, 
+  FlashOff as FlashOffIcon,  Refresh as RefreshIcon
 } from '@mui/icons-material';
-import { hasPermission } from '../../shared/common';
+
+// import { hasPermission } from '../../shared/common';
 import { webUrl } from '../../shared/constants';
 
 interface AppHeaderProps {
@@ -41,6 +44,7 @@ const AppHeader: React.FC<AppHeaderProps> = (props) => {
   const handleSignOut = () => {
     const userId = localStorage.getItem('user');
     const userName = localStorage.getItem('userName');
+
     localStorage.clear();
     if (userId) localStorage.setItem('user', userId);
     if (userName) localStorage.setItem('userName', userName);

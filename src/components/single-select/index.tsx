@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 
 interface SingleSelectProps {
@@ -11,7 +12,7 @@ interface SingleSelectProps {
   onChange: (name: string, value: string | number) => void;
 }
 
-export const SingleSelect: React.FC<SingleSelectProps> = (props) => {
+const SingleSelect: React.FC<SingleSelectProps> = (props) => {
   const { disabled, name, value, options, optionValue, optionName, onChange } = props;
 
   return (

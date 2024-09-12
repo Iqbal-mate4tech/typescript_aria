@@ -1,3 +1,5 @@
+import type { Dispatch } from 'redux';
+
 import {
     barcodeScanApi,
     updateQty,
@@ -24,7 +26,6 @@ import {
     receivePO
 } from './service';
 import { showLoaderAction, stopLoaderAction } from '../user_master/action';
-import { Dispatch } from 'redux';
 
 /**
  * Action types
@@ -61,14 +62,19 @@ export const getITODescriptionAction = (itoNumber: string) => {
 
         try {
             const response = await barcodeScanApi(itoNumber);
+
             if (response.length) {
                 dispatch(setBarcodeScan(response));
-                return response;
+                
+return response;
             }
-            return false;
+
+            
+return false;
         } catch (error) {
             dispatch(setBarcodeScan(null));
-            return false;
+            
+return false;
         }
     };
 };
@@ -84,14 +90,19 @@ export const getPODescriptionAction = (itoNumber: string) => {
 
         try {
             const response = await getPoid(itoNumber);
+
             if (response.length) {
                 dispatch(setBarcodeScanPO(response));
-                return response;
+                
+return response;
             }
-            return false;
+
+            
+return false;
         } catch (error) {
             dispatch(setBarcodeScanPO(null));
-            return false;
+            
+return false;
         }
     };
 };
@@ -102,11 +113,14 @@ export const receivePOAction = (data: any) => {
 
         try {
             const response = await receivePO(data);
+
             dispatch(stopLoaderAction('receivePO'));
-            return response;
+            
+return response;
         } catch (error) {
             dispatch(stopLoaderAction('receivePO'));
-            return false;
+            
+return false;
         }
     };
 };
@@ -117,11 +131,14 @@ export const updateCartonQtyAction = (data: any) => {
 
         try {
             const response = await updateQty(data);
+
             dispatch(stopLoaderAction('updateQty'));
-            return response;
+            
+return response;
         } catch (error) {
             dispatch(stopLoaderAction('updateQty'));
-            return false;
+            
+return false;
         }
     };
 };
@@ -137,12 +154,15 @@ export const validateStoreIdAction = (pallet_id: number, ito_id: number) => {
 
         try {
             const response = await validateStoreId(pallet_id, ito_id);
+
             dispatch(stopLoaderAction('validateStoreId'));
             dispatch(validateIdAction(response));
-            return response;
+            
+return response;
         } catch (error) {
             dispatch(stopLoaderAction('validateStoreId'));
-            return false;
+            
+return false;
         }
     };
 };
@@ -158,6 +178,7 @@ export const palletStatusAction = () => {
 
         try {
             const response = await palletStatus();
+
             dispatch(stopLoaderAction('palletStatus'));
             dispatch(receivedPalletStatusAction(response));
         } catch (error) {
@@ -177,6 +198,7 @@ export const palletStoreAction = () => {
 
         try {
             const response = await palletStore();
+
             dispatch(stopLoaderAction('palletStore'));
             dispatch(receivedPalletStoreAction(response));
         } catch (error) {
@@ -196,6 +218,7 @@ export const palletCategoryAction = () => {
 
         try {
             const response = await palletCategory();
+
             dispatch(stopLoaderAction('palletCategory'));
             dispatch(receivedPalletCategoryAction(response));
         } catch (error) {
@@ -216,23 +239,29 @@ export const palletsAction = (data: any) => {
         }
 
         try {
-            let response = await pallets(data);
+            const response = await pallets(data);
 
             if (data && data.page > 1) {
                 const state = getState();
+
                 response[0] = [...state.pallet.pallets[0], ...response[0]];
             }
 
             dispatch(receivedPalletsAction(response));
+
             if (data && data.page < 2) {
                 dispatch(stopLoaderAction('pallets'));
             }
-            return true;
+
+            
+return true;
         } catch (error) {
             if (data && data.page < 2) {
                 dispatch(stopLoaderAction('pallets'));
             }
-            return false;
+
+            
+return false;
         }
     };
 };
@@ -264,6 +293,7 @@ export const palletItemsAction = (id: number) => {
 
         try {
             const response = await palletItemsById(id);
+
             dispatch(stopLoaderAction('palletItems'));
             dispatch(receivedPalletItemsAction(response));
         } catch (error) {
@@ -283,6 +313,7 @@ export const palletTypesAction = () => {
 
         try {
             const response = await palletTypes();
+
             dispatch(stopLoaderAction('palletTypes'));
             dispatch(receivedPalletTypesAction(response));
         } catch (error) {
@@ -302,6 +333,7 @@ export const palletBuildersAction = () => {
 
         try {
             const response = await palletBuilders();
+
             dispatch(stopLoaderAction('palletBuilders'));
             dispatch(receivedPalletBuildersAction(response));
         } catch (error) {
@@ -333,10 +365,12 @@ export const savePalletAction = (data: any) => {
         try {
             await savePallet(data);
             dispatch(stopLoaderAction('savePallet'));
-            return true;
+            
+return true;
         } catch (error) {
             dispatch(stopLoaderAction('savePallet'));
-            return false;
+            
+return false;
         }
     };
 };
@@ -348,10 +382,12 @@ export const updatePalletAction = (data: any) => {
         try {
             await updatePallet(data);
             dispatch(stopLoaderAction('updatePallet'));
-            return true;
+            
+return true;
         } catch (error) {
             dispatch(stopLoaderAction('updatePallet'));
-            return false;
+            
+return false;
         }
     };
 };
@@ -363,10 +399,12 @@ export const savePalletItemAction = (data: any) => {
         try {
             await savePalletItem(data);
             dispatch(stopLoaderAction('savePalletItem'));
-            return true;
+            
+return true;
         } catch (error) {
             dispatch(stopLoaderAction('savePalletItem'));
-            return false;
+            
+return false;
         }
     };
 };
@@ -378,10 +416,12 @@ export const deletePalletAction = (data: number) => {
         try {
             await deletePallet(data);
             dispatch(stopLoaderAction('deletePallet'));
-            return true;
+            
+return true;
         } catch (error) {
             dispatch(stopLoaderAction('deletePallet'));
-            return false;
+            
+return false;
         }
     };
 };
@@ -393,10 +433,12 @@ export const deletePalletItemAction = (data: number) => {
         try {
             await deletePalletItem(data);
             dispatch(stopLoaderAction('deletePalletItem'));
-            return true;
+            
+return true;
         } catch (error) {
             dispatch(stopLoaderAction('deletePalletItem'));
-            return false;
+            
+return false;
         }
     };
 };
@@ -408,10 +450,12 @@ export const updatePalletItemAction = (data: any) => {
         try {
             await updatePalletItem(data);
             dispatch(stopLoaderAction('updatePalletItem'));
-            return true;
+            
+return true;
         } catch (error) {
             dispatch(stopLoaderAction('updatePalletItem'));
-            return false;
+            
+return false;
         }
     };
 };
@@ -427,6 +471,7 @@ export const palletShipperAction = () => {
 
         try {
             const response = await palletShipper();
+
             dispatch(stopLoaderAction('palletShipper'));
             dispatch(receivedPalletShipperAction(response));
         } catch (error) {
@@ -449,7 +494,9 @@ export const getItemDescriptionAction = (data: string) => {
     return async () => {
         try {
             const response = await getItemDescription(data);
-            return response;
+
+            
+return response;
         } catch (error) {
             return false;
         }
@@ -460,7 +507,9 @@ export const getITODetailsAction = (data: any) => {
     return async () => {
         try {
             const response = await getITODetails(data);
-            return response;
+
+            
+return response;
         } catch (error) {
             return false;
         }
@@ -484,8 +533,10 @@ export const syncPriceStatusAction = () => {
     return async (dispatch: Dispatch) => {
         try {
             const response = await syncPriceStatus();
+
             if (response) {
                 const isSynced = response.indexOf('False') > -1;
+
                 dispatch(setSyncStatus(!isSynced));
             } else {
                 dispatch(setSyncStatus(false));

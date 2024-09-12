@@ -1,10 +1,11 @@
+  import type { Dispatch } from 'redux';
+
 import {
     getPoid,
     addPoItems,
     receivePO,
   } from './service';
   import { showLoaderAction, stopLoaderAction } from '../user_master/action';
-  import { Dispatch } from 'redux';
   
   /**
    * Action types
@@ -38,6 +39,7 @@ import {
   interface POItem {
     poId: string;
     items: any[];
+
     // add other fields as necessary
   }
   
@@ -59,16 +61,19 @@ import {
   
       try {
         const response = await getPoid(poid);
+
         if (response.length) {
           dispatch(setBarcodeScan(response));
-          return response;
+          
+return response;
         }
   
         return false;
       } catch (error) {
         dispatch(setBarcodeScan(null));
         dispatch(stopLoaderAction('barcodeScan'));
-        return false;
+        
+return false;
       }
     };
   };
@@ -80,10 +85,12 @@ import {
       try {
         await addPoItems(data);
         dispatch(stopLoaderAction('addPoItems'));
-        return true;
+        
+return true;
       } catch (error) {
         dispatch(stopLoaderAction('addPoItems'));
-        return false;
+        
+return false;
       }
     };
   };
@@ -94,11 +101,14 @@ import {
   
       try {
         const response = await receivePO(data);
+
         dispatch(stopLoaderAction('receivePO'));
-        return response;
+        
+return response;
       } catch (error) {
         dispatch(stopLoaderAction('receivePO'));
-        return false;
+        
+return false;
       }
     };
   };

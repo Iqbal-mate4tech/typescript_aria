@@ -1,19 +1,25 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import jsPDF from 'jspdf';
+
+import { useRouter, useParams } from 'next/navigation';
+
+import {jsPDF} from 'jspdf';
 import 'jspdf-autotable';
 import * as XLSX from 'xlsx';
-import { useRouter, useParams } from 'next/navigation';
+
+
+
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  Card, CardContent, CardHeader, Typography, Grid, Button, TextField, Select, MenuItem, InputLabel, IconButton, Fab, Dialog, DialogTitle, DialogContent, DialogActions, Tooltip, Snackbar, Alert
+  Card, CardContent, CardHeader, Typography, Grid, Button, TextField, Select, MenuItem,
+   InputLabel, IconButton, Fab, Dialog, DialogTitle, DialogContent, DialogActions, Tooltip, Snackbar, Alert
 } from '@mui/material';
-import { Add, Delete, Edit } from '@mui/icons-material';
+import {  Delete, Edit } from '@mui/icons-material';
 
 import AppHeader from '@/components/app-header';
 import SingleSelect from '@/components/single-select';
-import PalletItemModal from '@/components/pallet-item-modal';
+import {PalletItemModal} from '@/components/pallet-item-modal';
 import ReceiveItemModal from '@/components/receive-item-modal';
 import DirectToStore from '@/components/direct-to-store';
 import { AppAlert } from '@/components/app-alert';
@@ -72,6 +78,7 @@ const AddUpdatePallet = () => {
   const setInitialData = () => {
     if (id && pallets && pallets[0]) {
       const palletToUpdate = pallets[0].find((x: any) => x.id === parseInt(id as string));
+
       if (palletToUpdate) {
         const _formData = {
           id: parseInt(id as string),
@@ -98,6 +105,7 @@ const AddUpdatePallet = () => {
           con_number: palletToUpdate.con_number,
           modal: {},
         };
+
         setFormData(_formData);
         dispatch(palletItemsAction(id));
       }
@@ -127,13 +135,16 @@ const AddUpdatePallet = () => {
   const getStoreName = (storeId: number) => {
     if (!palletStore) return 'N/A';
     const store = palletStore.find((store: any) => store.id === storeId);
-    return store ? store.store_name : 'N/A';
+
+    
+return store ? store.store_name : 'N/A';
   };
 
   const generatePDF = () => {
     if (!formData) return;
 
     const doc = new jsPDF();
+
     doc.setFontSize(18);
     doc.setFont('helvetica', 'bold');
     doc.text('Pallet Information', 20, 20);
@@ -142,6 +153,7 @@ const AddUpdatePallet = () => {
 
     const idText = `Pallet ID: ${formData.id || 'N/A'}`;
     const storeName = `Store Name: ${getStoreName(formData.store) || 'N/A'}`;
+
     doc.text(idText, 20, 40);
     doc.text(storeName, 80, 40);
     doc.setFontSize(12);
@@ -188,11 +200,13 @@ const AddUpdatePallet = () => {
 
     const wb = XLSX.utils.book_new();
     const ws1 = XLSX.utils.aoa_to_sheet(palletInfoData);
+
     ws1['!cols'] = [{ wch: 20 }, { wch: 30 }];
     ws1['!rows'] = palletInfoData.map(() => ({ hpx: 20 }));
     XLSX.utils.book_append_sheet(wb, ws1, 'Pallet Information');
 
     const ws2 = XLSX.utils.aoa_to_sheet(itemDetailsData);
+
     ws2['!cols'] = itemDetailsData[0].map(() => ({ wch: 15 }));
     ws2['!rows'] = [{ hpx: 20 }, ...itemDetailsData.slice(1).map(() => ({ hpx: 16 }))];
     XLSX.utils.book_append_sheet(wb, ws2, 'Item Details');
@@ -202,6 +216,7 @@ const AddUpdatePallet = () => {
 
   const onModalFieldChange = (name: string, value: any) => {
     const _formData = { ...formData };
+
     _formData.modal[name] = value;
     setFormData(_formData);
   };
@@ -229,9 +244,11 @@ const AddUpdatePallet = () => {
 
     if (itemData.id && itemData.id > 0) {
       const _palletItems = palletItems.map((item: any) => (item.id === itemData.id ? itemData : item));
+
       dispatch(receivedPalletItemsAction(_palletItems));
     } else if (selectedItemIndex === 0 || selectedItemIndex !== undefined) {
       const _palletItems = palletItems.map((item: any, idx: number) => (idx === selectedItemIndex ? itemData : item));
+
       dispatch(receivedPalletItemsAction(_palletItems));
     } else {
       dispatch(addItemToListAction(itemData));
@@ -301,6 +318,7 @@ const AddUpdatePallet = () => {
     if (formData.id) {
       if (formData.status?.toLowerCase() === 'received') {
         const notReceivedItems = palletData.palletItems.filter((x: any) => x.received_count > 0 && x.received_variance > 0);
+
         palletData.is_all_item_received = notReceivedItems.length <= 0 ? 1 : 0;
       }
 
@@ -315,6 +333,7 @@ const AddUpdatePallet = () => {
       });
     } else if (noOfPallet) {
       const promises = [];
+
       palletData.status = 'Dispatched';
       palletData.con_number = conNumber;
 
@@ -432,6 +451,7 @@ const AddUpdatePallet = () => {
             }
           : item
       );
+
       dispatch(receivedPalletItemsAction(_palletItems));
     } else if (selectedItemIndex === 0 || selectedItemIndex !== undefined) {
       const _palletItems = palletItems.map((item: any, idx: number) =>
@@ -444,6 +464,7 @@ const AddUpdatePallet = () => {
             }
           : item
       );
+
       dispatch(receivedPalletItemsAction(_palletItems));
     }
 
@@ -454,6 +475,7 @@ const AddUpdatePallet = () => {
     const _palletItems = palletItems.filter((item: any) =>
       palletItemId && palletItemId > 0 ? item.id !== palletItemId : item !== palletItems[selectedItemIndex]
     );
+
     dispatch(receivedPalletItemsAction(_palletItems));
     setShowItemConfirm(false);
     setPalletItemId(0);

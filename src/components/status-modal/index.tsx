@@ -1,9 +1,11 @@
 import React from 'react';
+
 import {
-  Card, CardContent, CardHeader, Button,
+  Card, CardContent, Button,
   Dialog, DialogTitle, DialogContent, DialogActions,
   Grid, Typography
 } from '@mui/material';
+
 import SingleSelect from '../single-select'; // Assuming you've converted SingleSelect already
 
 interface StatusModalProps {
@@ -16,7 +18,7 @@ interface StatusModalProps {
   closeModal: () => void;
 }
 
-export const StatusModal: React.FC<StatusModalProps> = (props) => {
+const StatusModal: React.FC<StatusModalProps> = (props) => {
   const { showModal, palletStatus, status, userName, onModalFieldChange, onDoneClick, closeModal } = props;
 
   return (

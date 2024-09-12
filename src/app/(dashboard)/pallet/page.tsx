@@ -1,12 +1,16 @@
 // src/pages/pallet/index.tsx
 "use client"
 import React, { useState, useEffect } from 'react';
+
+import { useRouter,usePathname } from 'next/navigation';
+
 import {
-  Card, CardContent, CardHeader, CardActions, Typography, Button, TextField, Grid, IconButton, Fab, Tooltip, Dialog, DialogTitle, DialogContent, DialogActions
+  Card, CardContent, CardHeader, Typography, Button, TextField, Grid, IconButton, 
+  Fab, Tooltip
 } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
-import { useRouter,usePathname } from 'next/navigation';
 import { useSelector, useDispatch } from 'react-redux';
+
 import {
   palletsAction, unmountPalletsAction, palletsMasterDataAction,
   clearPalletsAction, palletItemsAction, savePalletItemAction,
@@ -15,7 +19,7 @@ import {
 } from './action';
 import  AppHeader  from '@/components/app-header';
 import  SingleSelect  from '@/components/single-select';
-import  PalletItemModal  from '@/components/pallet-item-modal';
+import  {PalletItemModal}  from '@/components/pallet-item-modal';
 import { AppAlert } from '@/components/app-alert';
 import  StatusModal  from '@/components/status-modal';
 import { getUtcDateTime, hasPermission, isValidStatusToChange, 
@@ -78,6 +82,7 @@ const Pallet: React.FC = () => {
 
   const onModalFieldChange = (name: string, value: any) => {
     const _formData = { ...searchData };
+
     _formData.modal[name] = value;
     setSearchData(_formData);
   };
@@ -126,6 +131,7 @@ const Pallet: React.FC = () => {
         setDetailsToShowIndex(index);
       });
     }
+
     setItemDetailsToShowIndex(undefined);
   };
 
@@ -230,6 +236,7 @@ const Pallet: React.FC = () => {
     setShowStatusModal(true);
     setPalletId(data.id);
     const _status = JSON.parse(JSON.stringify(data.status));
+
     setUpdatedStatus(_status);
     setSearchData({
       ...searchData,
@@ -245,25 +252,29 @@ const Pallet: React.FC = () => {
     if (updatedStatus === searchData.currentStatus) {
       closeModal();
       setPalletId(0);
-      return;
+      
+return;
     }
 
     if (updatedStatus === 'Dispatched') {
       setAlertMessage('Cannot change status to dispatched from this page. Please use the dispatch page.');
       setShowAlert(true);
-      return;
+      
+return;
     }
 
     if (updatedStatus === 'Booked') {
       setAlertMessage('Cannot change status to booked from this page. Please use the booking page.');
       setShowAlert(true);
-      return;
+      
+return;
     }
 
     if (!isValidStatusToChange(updatedStatus, searchData.currentStatus)) {
       setAlertMessage(`You cannot change status from "${searchData.currentStatus}" to "${updatedStatus}"`);
       setShowAlert(true);
-      return;
+      
+return;
     }
 
     const request = {
@@ -290,6 +301,7 @@ const Pallet: React.FC = () => {
       setAlertMessage(response ? 'Deleted successfully!!!' : 'Deletion failed!!!');
       setShowAlert(true);
       setPalletId(0);
+
       if (response) {
         getPalletData();
         setDetailsToShowIndex(undefined);
@@ -322,6 +334,7 @@ const Pallet: React.FC = () => {
       setAlertMessage(response ? 'Deleted successfully!!!' : 'Deletion failed!!!');
       setShowAlert(true);
       setPalletItemId(0);
+
       if (response) {
         dispatch(palletItemsAction(palletId));
         setItemDetailsToShowIndex(undefined);

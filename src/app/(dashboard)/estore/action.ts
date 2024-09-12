@@ -1,4 +1,5 @@
-import { Dispatch } from 'redux';
+import type { Dispatch } from 'redux';
+
 import { getOnlineOrders, getOnlineOrdersCost } from './service';
 import { showLoaderAction, stopLoaderAction } from '../user_master/action';
 
@@ -59,6 +60,7 @@ export const ordersAction = (data: OrdersActionData) => {
 
     try {
       const response = await getOnlineOrders(request);
+
       if (data.page < 2) {
         dispatch(stopLoaderAction('orders'));
       }
@@ -67,16 +69,20 @@ export const ordersAction = (data: OrdersActionData) => {
 
       if (data.page > 1) {
         const state = getState();
+
         parsedResponse[0].orders = [...state.order.orders[0].orders, ...parsedResponse[0].orders];
       }
 
       dispatch(receivedOrdersAction(parsedResponse));
-      return true;
+      
+return true;
     } catch (error) {
       if (data.page < 2) {
         dispatch(stopLoaderAction('orders'));
       }
-      return false;
+
+      
+return false;
     }
   };
 };
@@ -98,6 +104,7 @@ export const ordersCostAction = () => {
   return async (dispatch: Dispatch) => {
     try {
       const response = await getOnlineOrdersCost();
+
       dispatch(receivedOrdersCostAction(response));
     } catch (error) {
       // Handle error if needed

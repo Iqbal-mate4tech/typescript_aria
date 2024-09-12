@@ -1,8 +1,10 @@
 import React from 'react';
+
 import {
-  Card, CardContent, CardHeader, Button, Typography,
+  Card, CardContent, Button, Typography,
   Grid, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Checkbox, FormControlLabel
 } from '@mui/material';
+
 import SingleSelect from '../single-select'; // Assuming you've converted SingleSelect already
 
 interface UserMasterModalProps {

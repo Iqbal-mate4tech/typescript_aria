@@ -1,11 +1,14 @@
 "use client";
 import React, { useState, useEffect } from "react";
+
+import { useRouter } from "next/navigation";
+
 import { Card, CardContent, Grid, IconButton, Typography, Box, Container, Tooltip, Snackbar, Alert } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
-import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
+
 import AppHeader from "@components/app-header";
-import { RootState } from "../../store"; // Adjust the import to match your store's file structure
+import type { RootState } from "../../store"; // Adjust the import to match your store's file structure
 import { addUpdateShipperAction, deleteShipperAction } from "../../action"; // Adjust these imports as needed
 import { palletShipperAction } from "../pallet/action";
 import { AppAlert } from "@components/app-alert";
@@ -47,9 +50,11 @@ const ShipperMaster: React.FC = () => {
 
   const onDoneClick = async () => {
     const request = { shipper_name: name };
+
     if (id) request.shipper_id = id;
 
     const response = await dispatch(addUpdateShipperAction(request));
+
     if (response) {
       closeModal();
       dispatch(palletShipperAction());
@@ -62,6 +67,7 @@ const ShipperMaster: React.FC = () => {
 
   const onDeleteClick = async () => {
     const response = await dispatch(deleteShipperAction(id));
+
     if (response) {
       setShowConfirm(false);
       dispatch(palletShipperAction());

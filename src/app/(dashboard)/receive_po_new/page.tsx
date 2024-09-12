@@ -1,22 +1,26 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import {
-  Button, Card, CardHeader, CardContent, Typography, Grid, TextField, Box, Switch,
-  Dialog, DialogActions, DialogContent, DialogTitle
-} from '@mui/material';
+
 import { useRouter } from 'next/navigation';
+
+import {
+  Button, Card, CardContent, Typography, Grid, TextField, Box
+} from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
+
+import BarcodeReader from 'react-barcode-reader';
+
+import KeyboardEventHandler from 'react-keyboard-event-handler';
+
 import  AppHeader  from '@/components/app-header';
 import {
   getPOIDDescriptionAction, addPoItemsAction, receivePOAction
 } from './action';
-import { RootState } from '../../store';
+import type { RootState } from '../../store';
 import { AppAlert } from '@/components/app-alert';
 import POQuantityModal from '@/components/po-quantity-modal';
 import POQAdditemModal from '@/components/po-add-item-modal';
-import BarcodeReader from 'react-barcode-reader';
-import KeyboardEventHandler from 'react-keyboard-event-handler';
 
 const ReceiveItotoggle: React.FC = () => {
   const [searchData, setSearchData] = useState({ modal: {} });
@@ -43,7 +47,7 @@ const ReceiveItotoggle: React.FC = () => {
   const barcodeScan = useSelector((state: RootState) => state.itotoggle?.barcodeScan || []);  const userName = localStorage.getItem('userName') || '';
 
   const onDoneClick = () => {
-    let _quantityReceived = parseInt(qtyReceivedAlready) !== -1
+    const _quantityReceived = parseInt(qtyReceivedAlready) !== -1
       ? parseInt(qtyReceived) + parseInt(qtyReceivedAlready || '0')
       : parseInt(qtyReceived);
 
@@ -106,6 +110,7 @@ const ReceiveItotoggle: React.FC = () => {
       });
     } else {
       const result = barcodeScan?.find(item => item.SupplierSku === paste_value);
+
       if (result) {
         setSupplierSku(paste_value);
         setQtyOrdered(result.QtyOrdered);
@@ -114,6 +119,7 @@ const ReceiveItotoggle: React.FC = () => {
         setShowModal(true);
       } else {
         const dt = new Date().toISOString().slice(0, 19).replace('T', ' ');
+
         setDateReceive(dt);
         setAlertMessage({
           show: true,

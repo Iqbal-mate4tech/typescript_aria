@@ -1,9 +1,13 @@
 'use client';
 
 import React from 'react';
-import { usePathname } from 'next/navigation';
-import Button from '@mui/material/Button';
+
 import type { ReactNode } from 'react';
+
+import { usePathname } from 'next/navigation';
+
+import Button from '@mui/material/Button';
+
 import LayoutWrapper from '@layouts/LayoutWrapper';
 import VerticalLayout from '@layouts/VerticalLayout';
 import HorizontalLayout from '@layouts/HorizontalLayout';
@@ -30,9 +34,11 @@ const LayoutClient = ({ children, mode, systemMode, direction }: LayoutClientPro
   return (
     <>
       {isLoginPage ? (
+
         // Render only the children (content of the login page) without layout components
         <>{children}</>
       ) : (
+
         // Render the full layout with sidebar and topbar
         <LayoutWrapper
           systemMode={systemMode}

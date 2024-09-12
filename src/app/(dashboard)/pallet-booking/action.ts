@@ -1,4 +1,5 @@
-import { Dispatch } from 'redux';
+import type { Dispatch } from 'redux';
+
 import { palletStoreAction, palletShipperAction, receivedPalletsAction } from '../pallet/action';
 import { palletByStatus, updatePalletShippingStatus } from '../pallet/service';
 import { stopLoaderAction, showLoaderAction } from '../../(dashboard)/user_master/action';
@@ -34,16 +35,20 @@ export const palletByStatusAction = (data: PalletByStatusData) => {
 
       if (data.page > 1) {
         const state = getState();
+
         response[0] = [...state.pallet.pallets[0], ...response[0]];
       }
 
       dispatch(receivedPalletsAction(response));
-      return true;
+      
+return true;
     } catch (error) {
       if (data.page < 2) {
         dispatch(stopLoaderAction('palletByStatus'));
       }
-      return false;
+
+      
+return false;
     }
   };
 };
@@ -55,10 +60,12 @@ export const updatePalletShippingStatusAction = (data: UpdatePalletShippingStatu
     try {
       await updatePalletShippingStatus(data);
       dispatch(stopLoaderAction('updatePalletShippingStatus'));
-      return true;
+      
+return true;
     } catch (error) {
       dispatch(stopLoaderAction('updatePalletShippingStatus'));
-      return false;
+      
+return false;
     }
   };
 };

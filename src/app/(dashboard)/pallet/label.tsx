@@ -1,4 +1,5 @@
 import Barcode from 'jsbarcode';
+
 import { convertTZ } from '../../../shared/common';
 import { config } from '../../../shared/constants';
 
@@ -17,6 +18,7 @@ export const printLabel = (palletData: PalletData): void => {
         </div>`;
     
     const popup = window.open('', '_blank')!;
+
     popup.document.write(content);
     setTimeout(() => {
         popup.document.close();
@@ -32,8 +34,10 @@ export const printLabel = (palletData: PalletData): void => {
 
 function textToBase64Barcode(text: string): string {
     const canvas = document.createElement("canvas");
+
     Barcode(canvas, text, { format: "CODE39", height: 40 });
-    return canvas.toDataURL("image/png");
+    
+return canvas.toDataURL("image/png");
 }
 
 export const getPalletLabel = (data: PalletData): string => {

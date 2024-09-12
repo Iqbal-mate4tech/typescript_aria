@@ -1,4 +1,6 @@
 // src/containers/purchase-order/action.ts
+  import type { Dispatch } from 'redux';
+
 import {
     poItems,
     poItemsById,
@@ -10,7 +12,6 @@ import {
   } from './service';
   import { showLoaderAction, stopLoaderAction } from '../user_master/action';
   import { palletStore } from '../pallet/service';
-  import { Dispatch } from 'redux';
   
   /**
    * Action types
@@ -45,14 +46,17 @@ import {
   
         if (data && data.page > 1) {
           const state = { ...getState() };
+
           response[0] = [...state.purchaseOrder.po[0], ...response[0]];
         }
   
         dispatch(receivedPOAction(response));
-        return true;
+        
+return true;
       } catch (error) {
         if (data && data.page < 2) dispatch(stopLoaderAction('poItems'));
-        return false;
+        
+return false;
       }
     };
   };
@@ -76,6 +80,7 @@ import {
   
       try {
         const response = await poItemsById(id);
+
         dispatch(stopLoaderAction('pOItems'));
         dispatch(receivedPOItemsAction(response));
       } catch (error) {
@@ -102,6 +107,7 @@ import {
   
       try {
         const response = await poStatus();
+
         dispatch(stopLoaderAction('poStatus'));
         dispatch(receivedPOStatusAction(response));
       } catch (error) {
@@ -121,6 +127,7 @@ import {
   
       try {
         const response = await palletStore();
+
         dispatch(stopLoaderAction('poStore'));
         dispatch(receivedPOStoreAction(response));
       } catch (error) {
@@ -140,12 +147,15 @@ import {
   
       try {
         const response = await poQuantity(data.searchPOId, data.supplierSku);
+
         dispatch(stopLoaderAction('poQuantity'));
         dispatch(receivedPOQuantityAction(response));
-        return response;
+        
+return response;
       } catch (error) {
         dispatch(stopLoaderAction('poQuantity'));
-        return false;
+        
+return false;
       }
     };
   };
@@ -156,11 +166,14 @@ import {
   
       try {
         const response = await receivePO(data);
+
         dispatch(stopLoaderAction('receivePO'));
-        return response;
+        
+return response;
       } catch (error) {
         dispatch(stopLoaderAction('receivePO'));
-        return false;
+        
+return false;
       }
     };
   };
@@ -171,11 +184,14 @@ import {
   
       try {
         const response = await uploadPO(data);
+
         dispatch(stopLoaderAction('uploadPO'));
-        return response;
+        
+return response;
       } catch (error) {
         dispatch(stopLoaderAction('uploadPO'));
-        return false;
+        
+return false;
       }
     };
   };
@@ -186,11 +202,14 @@ import {
   
       try {
         const response = await poStatusAndItemCount(data);
+
         dispatch(stopLoaderAction('poStatusAndItemCount'));
-        return response;
+        
+return response;
       } catch (error) {
         dispatch(stopLoaderAction('poStatusAndItemCount'));
-        return false;
+        
+return false;
       }
     };
   };

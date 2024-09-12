@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { Modal, Box, Card, CardContent, CardHeader, TextField, Button, Grid } from '@mui/material';
 
 interface MasterModalProps {
@@ -10,7 +11,7 @@ interface MasterModalProps {
   onDoneClick: () => void;
 }
 
-export const MasterModal: React.FC<MasterModalProps> = (props) => {
+const MasterModal: React.FC<MasterModalProps> = (props) => {
   const { showModal, closeModal, id, name, setName, onDoneClick } = props;
 
   return (

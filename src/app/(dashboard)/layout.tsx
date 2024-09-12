@@ -135,6 +135,7 @@
 
 import React from 'react';
 import type { ReactNode } from 'react';
+
 import Providers from '@components/Providers';
 import { getMode, getSystemMode } from '@core/utils/serverHelpers';
 import LayoutClient from '@components/LayoutClient';

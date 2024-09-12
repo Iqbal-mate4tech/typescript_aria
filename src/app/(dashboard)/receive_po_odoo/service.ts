@@ -7,12 +7,14 @@ interface PoItem {
   id: number;
   name: string;
   quantity: number;
+
   // Add more fields as required
 }
 
 interface ReceivePOData {
   poId: string;
   items: PoItem[];
+
   // Add more fields as required
 }
 

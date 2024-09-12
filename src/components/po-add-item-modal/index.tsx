@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {
   Modal, Box, Card, CardContent, CardHeader, TextField, Button, Grid, Typography, TextareaAutosize
 } from '@mui/material';
@@ -27,7 +28,7 @@ interface POQAddItemModalProps {
   onDoneClick: () => void;
 }
 
-export const POQAddItemModal: React.FC<POQAddItemModalProps> = (props) => {
+const POQAddItemModal: React.FC<POQAddItemModalProps> = (props) => {
   const {
     showModal, closeModal, poid, SupplierSku, Qty, setQty, storeid, setStoreid, userstoreid, setUserstoreid,
     description, setDescription, cartonqty, setCartonqty, innerqty, setInnerqty, dateReceive, userName, comment, setComment, onDoneClick

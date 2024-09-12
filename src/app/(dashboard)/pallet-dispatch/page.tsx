@@ -1,18 +1,21 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+
+import { useRouter } from 'next/navigation';
+
 import {
   Card, CardContent, Button, TextField, Typography, Checkbox, Grid, TextareaAutosize, CircularProgress, Box
 } from '@mui/material';
-import { useRouter } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
+
 import {
   palletsAction, palletItemsAction, unmountPalletsAction, clearPalletsAction, clearFormData, updatePalletFormData
 } from '../pallet/action';
 import {
   palletBookingMasterDataAction, updatePalletShippingStatusAction, palletByStatusAction
 } from '../pallet-booking/action';
-import { RootState, AppDispatch } from '../../store';
+import type { RootState, AppDispatch } from '../../store';
 import AppHeader from '@components/app-header';
 import { AppAlert } from '@components/app-alert';
 import SingleSelect from '@components/single-select';
@@ -121,6 +124,7 @@ const PalletDispatch: React.FC = () => {
         setDetailsToShowIndex(index);
       });
     }
+
     setItemDetailsToShowIndex(undefined);
   };
 
@@ -132,7 +136,8 @@ const PalletDispatch: React.FC = () => {
     if (!formData?.conNumber || !formData?.shipper || !formData?.palletIds || formData.palletIds.length <= 0) {
       setAlertMessage('Please enter con. number, select shipper and pallet to dispatch');
       setShowAlert(true);
-      return;
+      
+return;
     }
 
     const request: any = {
@@ -146,6 +151,7 @@ const PalletDispatch: React.FC = () => {
     dispatch(updatePalletShippingStatusAction(request)).then((response: boolean) => {
       setAlertMessage(response ? 'Dispatched successfully!!!' : 'Dispatching failed!!!');
       setShowAlert(true);
+
       if (response) {
         setItemDetailsToShowIndex(undefined);
         setDetailsToShowIndex(undefined);
@@ -161,7 +167,7 @@ const PalletDispatch: React.FC = () => {
     if (formData?.palletIds) {
       let _palletIds = [...formData.palletIds];
       let total = 0;
-      let typeToUpdate: any = {};
+      const typeToUpdate: any = {};
 
       const isAlreadyChecked = _palletIds.includes(pallet.id);
 
@@ -179,6 +185,7 @@ const PalletDispatch: React.FC = () => {
 
       if (pallet.pallet_type) {
         const palletType = pallet.pallet_type.toLowerCase();
+
         switch (palletType) {
           case 'chep':
             typeToUpdate.chep = checked
@@ -201,6 +208,7 @@ const PalletDispatch: React.FC = () => {
           default:
             break;
         }
+
         typeToUpdate.total = formData.total ? formData.total + total : total;
       }
 

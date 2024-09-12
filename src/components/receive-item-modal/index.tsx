@@ -1,7 +1,9 @@
 import React from 'react';
+
 import {
   Modal, Box, Card, CardContent, CardHeader, Typography, TextField, Button, Grid
 } from '@mui/material';
+
 import { getVariance } from '../../shared/common';
 
 interface ReceiveItemModalProps {
@@ -15,7 +17,7 @@ interface ReceiveItemModalProps {
   };
 }
 
-export const ReceiveItemModal: React.FC<ReceiveItemModalProps> = (props) => {
+const ReceiveItemModal: React.FC<ReceiveItemModalProps> = (props) => {
   const { showModal, closeModal, onDoneClick, onModalFieldChange, modal } = props;
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {

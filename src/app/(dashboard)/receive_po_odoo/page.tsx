@@ -1,16 +1,19 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import {
-  Button, Card, CardContent, CardHeader, TextField, Grid, Typography, Box,
-} from '@mui/material';
+import React, { useState } from 'react';
+
 import { useRouter } from 'next/navigation';
+
+import {
+  Button, Card, CardContent, TextField, Grid, Typography, Box,
+} from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
+
 import AppHeader from '@/components/app-header';
 import {
   getPOIDdescriptionAction, AddPoItemsAction, receivePOAction, UpdateQtytoOdooAction
 } from './action';
-import { RootState } from '../../store';
+import type { RootState } from '../../store';
 import POQuantityModal from '@/components/po-quantity-modal';
 import POQAdditemModal from '@/components/po-add-item-modal';
 import {AppAlert} from '@/components/app-alert';
@@ -43,6 +46,7 @@ const ReceivePONewOdoo: React.FC = () => {
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement> | string) => {
     const pasteValue = typeof event === 'string' ? event : event.clipboardData?.getData('Text') || '';
+
     if (!toggle) {
       dispatch(getPOIDdescriptionAction(pasteValue)).then((response: any) => {
         if (response) {
@@ -54,6 +58,7 @@ const ReceivePONewOdoo: React.FC = () => {
       });
     } else {
       const result = barcodeScan?.[0]?.data.order_lines.find((item: any) => item.barcode === pasteValue);
+
       if (result) {
         setSupplierSku(pasteValue);
         setQtyOrdered(result.qty_ordered);
@@ -63,6 +68,7 @@ const ReceivePONewOdoo: React.FC = () => {
         setShowModal(true);
       } else {
         const dt = new Date().toISOString().slice(0, 19).replace('T', ' ');
+
         setDateReceive(dt);
         setAlertMessage({
           show: true,
@@ -93,6 +99,7 @@ const ReceivePONewOdoo: React.FC = () => {
       orderline_id: odooId!,
       qty_to_receive: qtyToReceive!,
     };
+
     receiveItems(data);
   };
 
@@ -109,6 +116,7 @@ const ReceivePONewOdoo: React.FC = () => {
       carton_qty: cartonQty!,
       inner_qty: innerQty!,
     };
+
     dispatch(AddPoItemsAction(response_data)).then((response: any) => {
       response || setAlertMessage({ show: true, msg: 'Updation failed' });
       setAddShowModal(false);

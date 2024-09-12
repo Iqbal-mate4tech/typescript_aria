@@ -1,13 +1,16 @@
 "use client"
 import React, { useState, useEffect } from 'react';
+
+import { useRouter } from 'next/navigation';
+
 import { Card, CardContent, Grid, IconButton, Typography, Tooltip, Box,Container,Snackbar,Alert} from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
-import { useRouter } from 'next/navigation';
+
 import AppHeader from '@components/app-header';
 import UserMasterModal from '@components/user-modal';
 import {AppAlert} from '@components/app-alert';
-import { RootState } from '../../store';
+import type { RootState } from '../../store';
 
 import { usersAction, userTypeAction } from '../user_master/action'; // Adjust paths as necessary
 import { deleteUserAction, addUpdateUserAction } from '../../action'; // Adjust paths as necessary
@@ -84,6 +87,7 @@ const UserMaster: React.FC = () => {
     }
 
     const response = await dispatch(addUpdateUserAction(request));
+
     if (response) {
       closeModal();
       dispatch(usersAction());
@@ -96,6 +100,7 @@ const UserMaster: React.FC = () => {
 
   const onDeleteClick = async () => {
     const response = await dispatch(deleteUserAction(id));
+
     if (response) {
       setShowConfirm(false);
       dispatch(usersAction());

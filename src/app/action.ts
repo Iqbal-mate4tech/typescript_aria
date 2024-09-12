@@ -1,4 +1,4 @@
-import { AppThunk } from './store';
+import type { AppThunk } from './store';
 import { showLoaderAction, stopLoaderAction } from './(dashboard)/user_master/action';
 import {
   addUpdateShipper,
@@ -45,11 +45,13 @@ export const addUpdateShipperAction = (req: ShipperData): AppThunk<Promise<boole
     try {
       await addUpdateShipper(req);
       dispatch(stopLoaderAction('AddUpdateShipper'));
-      return true;
+      
+return true;
     } catch (error) {
       console.error('Error in addUpdateShipperAction:', error);
       dispatch(stopLoaderAction('AddUpdateShipper'));
-      return false;
+      
+return false;
     }
   };
 };
@@ -61,11 +63,13 @@ export const deleteShipperAction = (id: number): AppThunk<Promise<boolean>> => {
     try {
       await deleteShipper(id);
       dispatch(stopLoaderAction('DeleteShipper'));
-      return true;
+      
+return true;
     } catch (error) {
       console.error('Error in deleteShipperAction:', error);
       dispatch(stopLoaderAction('DeleteShipper'));
-      return false;
+      
+return false;
     }
   };
 };
@@ -77,11 +81,13 @@ export const addUpdatePalletTypeAction = (req: PalletTypeData): AppThunk<Promise
     try {
       await addUpdatePalletType(req);
       dispatch(stopLoaderAction('addUpdatePalletType'));
-      return true;
+      
+return true;
     } catch (error) {
       console.error('Error in addUpdatePalletTypeAction:', error);
       dispatch(stopLoaderAction('addUpdatePalletType'));
-      return false;
+      
+return false;
     }
   };
 };
@@ -93,11 +99,13 @@ export const deletePalletTypeAction = (id: number): AppThunk<Promise<boolean>> =
     try {
       await deletePalletType(id);
       dispatch(stopLoaderAction('deletePalletType'));
-      return true;
+      
+return true;
     } catch (error) {
       console.error('Error in deletePalletTypeAction:', error);
       dispatch(stopLoaderAction('deletePalletType'));
-      return false;
+      
+return false;
     }
   };
 };
@@ -109,11 +117,13 @@ export const addUpdateUserAction = (req: UserData): AppThunk<Promise<boolean>> =
     try {
       await addUpdateUsers(req);
       dispatch(stopLoaderAction('addUpdateUsers'));
-      return true;
+      
+return true;
     } catch (error) {
       console.error('Error in addUpdateUserAction:', error);
       dispatch(stopLoaderAction('addUpdateUsers'));
-      return false;
+      
+return false;
     }
   };
 };
@@ -125,11 +135,13 @@ export const deleteUserAction = (id: number): AppThunk<Promise<boolean>> => {
     try {
       await deleteUser(id);
       dispatch(stopLoaderAction('deleteUser'));
-      return true;
+      
+return true;
     } catch (error) {
       console.error('Error in deleteUserAction:', error);
       dispatch(stopLoaderAction('deleteUser'));
-      return false;
+      
+return false;
     }
   };
 };
@@ -141,11 +153,13 @@ export const addUpdateCategoryAction = (req: CategoryData): AppThunk<Promise<boo
     try {
       await addUpdateCategory(req);
       dispatch(stopLoaderAction('addUpdateCategory'));
-      return true;
+      
+return true;
     } catch (error) {
       console.error('Error in addUpdateCategoryAction:', error);
       dispatch(stopLoaderAction('addUpdateCategory'));
-      return false;
+      
+return false;
     }
   };
 };
@@ -157,11 +171,13 @@ export const deleteCategoryAction = (id: number): AppThunk<Promise<boolean>> => 
     try {
       await deleteCategory(id);
       dispatch(stopLoaderAction('deleteCategory'));
-      return true;
+      
+return true;
     } catch (error) {
       console.error('Error in deleteCategoryAction:', error);
       dispatch(stopLoaderAction('deleteCategory'));
-      return false;
+      
+return false;
     }
   };
 };

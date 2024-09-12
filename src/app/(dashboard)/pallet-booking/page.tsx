@@ -1,15 +1,18 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Card, CardContent, Button, TextField, Typography, Checkbox, Grid, TextareaAutosize, CircularProgress, Box } from '@mui/material';
+
 import { useRouter } from 'next/navigation';
+
+import { Card, CardContent, Button, TextField, Typography, Checkbox, Grid, TextareaAutosize, CircularProgress, Box } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
+
 import {
   palletsAction, palletItemsAction, unmountPalletsAction,
   clearPalletsAction, clearFormData, updatePalletFormData
 } from '../pallet/action';
 import { palletBookingMasterDataAction, updatePalletShippingStatusAction, palletByStatusAction } from './action';
-import { RootState, AppDispatch } from '../../store';
+import type { RootState, AppDispatch } from '../../store';
 import AppHeader from '@components/app-header';
 import { AppAlert } from '@components/app-alert';
 import SingleSelect from '@components/single-select';
@@ -53,7 +56,9 @@ const PalletBooking: React.FC = () => {
       dispatch(clearFormData({ palletIds: [] }));
       getPalletData(1);
     }
-    return () => {
+
+    
+return () => {
       dispatch(unmountPalletsAction());
     };
   }, [isAuthenticated]);
@@ -62,6 +67,7 @@ const PalletBooking: React.FC = () => {
     if (isLoading || !hasMore) return;
 
     setIsLoading(true);
+
     const request = {
       page,
       status: 'Wrapped|On Hold|Request To Hold|Request To Dispatch',
@@ -69,12 +75,14 @@ const PalletBooking: React.FC = () => {
     };
 
     const response = await dispatch(palletByStatusAction(request));
+
     if (response && response[0]?.length === 0) {
       setHasMore(false);
       setShowNoMoreData(true);
     } else {
       setPageNo(prevPageNo => prevPageNo + 1);
     }
+
     setIsLoading(false);
   }, [dispatch, formData, isLoading, hasMore]);
 
@@ -86,7 +94,8 @@ const PalletBooking: React.FC = () => {
     };
 
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    
+return () => window.removeEventListener('scroll', handleScroll);
   }, [pageNo, hasMore, isLoading, getPalletData]);
 
   const onFieldChange = (name: string, value: any) => {
@@ -119,6 +128,7 @@ const PalletBooking: React.FC = () => {
         setDetailsToShowIndex(index);
       });
     }
+
     setItemDetailsToShowIndex(undefined);
   };
 
@@ -130,7 +140,8 @@ const PalletBooking: React.FC = () => {
     if (!formData?.shipper || !formData?.palletIds || formData.palletIds.length <= 0) {
       setAlertMessage('Please select shipper and pallet to book');
       setShowAlert(true);
-      return;
+      
+return;
     }
 
     const request = {
@@ -143,6 +154,7 @@ const PalletBooking: React.FC = () => {
     dispatch(updatePalletShippingStatusAction(request)).then((response: boolean) => {
       setAlertMessage(response ? 'Booked successfully!' : 'Booking failed!');
       setShowAlert(true);
+
       if (response) {
         setItemDetailsToShowIndex(undefined);
         setDetailsToShowIndex(undefined);
@@ -158,7 +170,7 @@ const PalletBooking: React.FC = () => {
     if (formData?.palletIds) {
       let _palletIds = [...formData.palletIds];
       let total = 0;
-      let typeToUpdate: any = {};
+      const typeToUpdate: any = {};
 
       const isAlreadyChecked = _palletIds.includes(pallet.id);
 
@@ -176,6 +188,7 @@ const PalletBooking: React.FC = () => {
 
       if (pallet.pallet_type) {
         const palletType = pallet.pallet_type.toLowerCase();
+
         switch (palletType) {
           case 'chep':
             typeToUpdate.chep = checked
@@ -198,6 +211,7 @@ const PalletBooking: React.FC = () => {
           default:
             break;
         }
+
         typeToUpdate.total = formData.total ? formData.total + total : total;
       }
 

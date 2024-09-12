@@ -30,9 +30,9 @@ export const productAction = (data: any) => {
         dispatch(receivedProductAction([])); // Clear current product data
         dispatch(showLoaderAction('Product'));
 
-        let state = { ...getState() };
-        let pageData = state.product.pageData || [];
-        let request: any = {};
+        const state = { ...getState() };
+        const pageData = state.product.pageData || [];
+        const request: any = {};
 
         if (data.searchTitle) request.description = data.searchTitle;
         if (data.searchTag) request.tags = data.searchTag;
@@ -47,11 +47,13 @@ export const productAction = (data: any) => {
                 pageData[data.page - 1] = response.nextCursor;
                 dispatch(updateProductPageData(pageData));
                 dispatch(receivedProductAction(response));
-                return true;
+                
+return true;
             })
             .catch(() => {
                 dispatch(stopLoaderAction('Product'));
-                return false;
+                
+return false;
             });
     };
 };
@@ -100,11 +102,13 @@ export const updateProductAction = (req: any) => {
         return updateProduct(req)
             .then(() => {
                 dispatch(stopLoaderAction('UpdateProduct'));
-                return true;
+                
+return true;
             })
             .catch(() => {
                 dispatch(stopLoaderAction('UpdateProduct'));
-                return false;
+                
+return false;
             });
     };
 };
@@ -116,11 +120,13 @@ export const updateProductDescriptionAction = (req: any) => {
         return updateProductDescription(req)
             .then(() => {
                 dispatch(stopLoaderAction('UpdateProductDescription'));
-                return true;
+                
+return true;
             })
             .catch(() => {
                 dispatch(stopLoaderAction('UpdateProductDescription'));
-                return false;
+                
+return false;
             });
     };
 };
@@ -132,11 +138,13 @@ export const syncProductsAction = (req: any) => {
         return syncProducts(req)
             .then(() => {
                 dispatch(stopLoaderAction('SyncProducts'));
-                return true;
+                
+return true;
             })
             .catch(() => {
                 dispatch(stopLoaderAction('SyncProducts'));
-                return false;
+                
+return false;
             });
     };
 };

@@ -1,7 +1,8 @@
 import React from 'react';
+
+
 import { Backdrop, CircularProgress, Typography } from '@mui/material';
 import { connect } from 'react-redux';
-import { useRouter } from 'next/router';
 
 interface LoaderProps {
   showLoader: string[];

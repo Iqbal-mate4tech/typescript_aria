@@ -5,14 +5,17 @@ import { stringformat } from '../../../shared/common';
 
 // Define types for request data and response types as needed
 interface POItemsData {
+
   // Define the structure of data that the `poItems` function expects
 }
 
 interface POStatusResponse {
+
   // Define the structure of the response from the poStatus function
 }
 
 interface POQuantityResponse {
+
   // Define the structure of the response from the poQuantity function
 }
 

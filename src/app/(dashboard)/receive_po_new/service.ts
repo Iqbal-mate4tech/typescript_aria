@@ -6,6 +6,7 @@ import { stringformat } from '../../../shared/common';
 interface PoItemData {
   poId: any;
   items: any[];
+
   // Add more fields based on your API's expected data structure
 }
 
@@ -13,12 +14,15 @@ interface ReceivePoData {
   poId: any;
   items: any[];
   receivedBy: string;
+
   // Add more fields based on your API's expected data structure
 }
 
 export function getPoid(poid: string | number): Promise<any> {
   const url = stringformat(apiUrl.getPoid, [poid]);
-  return doGetRequest(url);
+
+  
+return doGetRequest(url);
 }
 
 export function addPoItems(data: PoItemData): Promise<any> {

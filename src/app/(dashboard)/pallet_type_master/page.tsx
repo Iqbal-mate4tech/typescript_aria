@@ -1,10 +1,14 @@
 "use client";
 import React, { useState, useEffect } from "react";
+
 import { useRouter } from "next/navigation";
+
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/app/store";
+
 import { IconButton, Card, CardContent, Typography, Grid, Tooltip, Box, Container, Snackbar, Alert } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
+
+import type { RootState } from "@/app/store";
 import AppHeader from "@/components/app-header";
 import MasterModal from "@/components/master-modal";
 import {AppAlert} from "@/components/app-alert";
@@ -47,9 +51,11 @@ const PalletTypeMaster: React.FC = () => {
 
   const onDoneClick = async () => {
     const request = { type: name };
+
     if (id) request.id = id;
 
     const response = await dispatch(addUpdatePalletTypeAction(request));
+
     if (response) {
       closeModal();
       dispatch(palletTypesAction());
@@ -62,6 +68,7 @@ const PalletTypeMaster: React.FC = () => {
 
   const onDeleteClick = async () => {
     const response = await dispatch(deletePalletTypeAction(id));
+
     if (response) {
       setShowConfirm(false);
       dispatch(palletTypesAction());

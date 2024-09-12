@@ -5,11 +5,13 @@ import { stringformat } from '../../../shared/common';
 export interface PalletItem {
   id: number;
   name: string;
+
   // Add other properties as necessary
 }
 
 export interface PalletData {
   palletId: number;
+
   // Add other properties as necessary
 }
 

@@ -1,11 +1,14 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+
+import { useRouter } from 'next/navigation';
+
 import { Card, CardContent, Grid, IconButton, Typography, Tooltip, Snackbar, Alert, Container, Box } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
-import { useRouter } from 'next/navigation';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '@/app/store';
+
+import type { RootState } from '@/app/store';
 import useAuth from '@/components/withAuth';
 import AppHeader from '@/components/app-header';
 import MasterModal from '@/components/master-modal';
@@ -47,9 +50,11 @@ const CategoryMaster: React.FC = () => {
 
   const onDoneClick = async () => {
     const request: any = { category_name: name }; // Explicitly typing request as any
+
     if (id) request.category_id = id;
 
     const response = await dispatch(addUpdateCategoryAction(request));
+
     if (response) {
       closeModal();
       dispatch(palletCategoryAction());
@@ -62,6 +67,7 @@ const CategoryMaster: React.FC = () => {
 
   const onDeleteClick = async () => {
     const response = await dispatch(deleteCategoryAction(id));
+
     if (response) {
       setShowConfirm(false);
       dispatch(palletCategoryAction());

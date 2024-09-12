@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {
   Modal, Box, Card, CardContent, CardHeader, Typography, TextField, Button, Grid, TextareaAutosize
 } from '@mui/material';
@@ -18,7 +19,7 @@ interface POQuantityModalProps {
   onDoneClick: () => void;
 }
 
-export const POQuantityModal: React.FC<POQuantityModalProps> = (props) => {
+const POQuantityModal: React.FC<POQuantityModalProps> = (props) => {
   const {
     showModal, closeModal, poId, sku, description, qtyOrdered, qtyReceivedAlready, qtyReceived, setQtyReceived, comment, setComment, onDoneClick
   } = props;

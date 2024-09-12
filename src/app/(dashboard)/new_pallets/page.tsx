@@ -1,5 +1,9 @@
 "use client"
-import React, { useState, ClipboardEvent } from "react";
+import type { ClipboardEvent } from "react";
+import React, { useState } from "react";
+
+import { useRouter } from "next/navigation";
+
 import {
   Card,
   CardContent,
@@ -10,8 +14,9 @@ import {
   Typography,
   Box,
 } from "@mui/material";
-import { useRouter } from "next/navigation";
-import { connect, ConnectedProps } from "react-redux";
+import type { ConnectedProps } from "react-redux";
+import { connect } from "react-redux";
+
 import  AppHeader  from "../../../components/app-header";
 import {
   getITODescriptionAction,
@@ -26,7 +31,7 @@ import {
   getPODescriptionAction,
 } from "./action";
 import { AppAlert } from "../../../components/app-alert";
-import { RootState } from "../../store";
+import type { RootState } from "../../store";
 
 const mapStateToProps = (state: RootState) => ({
   barcodeScan: state.itotoggle.barcodeScan,
@@ -50,6 +55,7 @@ const mapDispatchToProps = {
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
+
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type PalletNewProps = PropsFromRedux;
@@ -57,6 +63,7 @@ type PalletNewProps = PropsFromRedux;
 const PalletNew: React.FC<PalletNewProps> = (props) => {
   const [toggle, setToggle] = useState<boolean>(false);
   const [ito, setIto] = useState<string | false>(false);
+
   const [alertMessage, setAlertMessage] = useState({
     show: false,
     msg: "",
@@ -64,6 +71,7 @@ const PalletNew: React.FC<PalletNewProps> = (props) => {
     btnCancelText: "",
     btnOkText: "",
   });
+
   const [poid, setPoid] = useState<string | false>(false);
   const [screen, setScreen] = useState<number>(1);
   const router = useRouter();
@@ -93,8 +101,10 @@ const PalletNew: React.FC<PalletNewProps> = (props) => {
       } else if (screen === 2) {
         // Handle ITO barcode scan
         const result = props.barcodeScan.find((item) => item.SKU === pasteValue);
+
         if (result) {
           const cartonPicked = parseInt(result.CartonPicked || "0") + 1;
+
           const response_data = {
             CartonPicked: cartonPicked,
             ITOID: ito as string,
@@ -115,6 +125,7 @@ const PalletNew: React.FC<PalletNewProps> = (props) => {
                 const resultIndex = props.barcodeScan.findIndex(
                   (item) => item.SKU === pasteValue
                 );
+
                 props.barcodeScan[resultIndex].CartonPicked = cartonPicked;
                 document.getElementById(pasteValue)!.innerText = `${cartonPicked}`;
               }
@@ -143,8 +154,10 @@ const PalletNew: React.FC<PalletNewProps> = (props) => {
         const result = props.barcodeScanPo.find(
           (item) => item.SupplierSku === pasteValue
         );
+
         if (result) {
           const qtyReceived = parseInt(result.QtyReceived || "0") + 1;
+
           const response_data = {
             qtyReceived,
             poId: poid as string,
@@ -156,6 +169,7 @@ const PalletNew: React.FC<PalletNewProps> = (props) => {
               const resultIndex = props.barcodeScanPo.findIndex(
                 (item) => item.SupplierSku === pasteValue
               );
+
               props.barcodeScanPo[resultIndex].QtyReceived = qtyReceived;
               document.getElementById(pasteValue)!.innerText = `${qtyReceived}`;
             }
@@ -190,7 +204,9 @@ const PalletNew: React.FC<PalletNewProps> = (props) => {
         </Card>
       ));
     }
-    return null;
+
+    
+return null;
   };
 
   const renderBarcodePoItems = () => {
@@ -217,7 +233,9 @@ const PalletNew: React.FC<PalletNewProps> = (props) => {
         </Card>
       ));
     }
-    return null;
+
+    
+return null;
   };
 
   const renderScreen = () => {

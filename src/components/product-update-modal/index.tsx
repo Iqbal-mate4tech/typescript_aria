@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {
   Modal, Box, Card, CardContent, CardHeader, Typography, TextField, Button, Grid
 } from '@mui/material';
@@ -17,7 +18,7 @@ interface ProductUpdateModalProps {
   onDoneClick: () => void;
 }
 
-export const ProductUpdateModal: React.FC<ProductUpdateModalProps> = (props) => {
+const ProductUpdateModal: React.FC<ProductUpdateModalProps> = (props) => {
   const {
     showModal, closeModal, productDescription, setProductDescription, seoTitle, setSeoTitle, seoDescription, setSeoDescription, onDoneClick
   } = props;
@@ -41,6 +42,7 @@ export const ProductUpdateModal: React.FC<ProductUpdateModalProps> = (props) => 
                   data={productDescription}
                   onChange={(event: any, editor: any) => {
                     const data = editor.getData();
+
                     setProductDescription(data);
                   }}
                 />

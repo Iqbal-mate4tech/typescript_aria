@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {
   Dialog,
   DialogActions,
@@ -21,7 +22,7 @@ interface DirectToStoreProps {
   onDoneClick: () => void;
 }
 
-export const DirectToStore: React.FC<DirectToStoreProps> = (props) => {
+const DirectToStore: React.FC<DirectToStoreProps> = (props) => {
   return (
     <Dialog open={props.showModal} onClose={props.closeModal} className="direct-to-store-modal">
       <DialogTitle>Direct to Store</DialogTitle>

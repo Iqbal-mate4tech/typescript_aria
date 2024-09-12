@@ -1,12 +1,10 @@
 "use client"
 import React, { useState, useEffect, useCallback } from 'react';
+
 import { useRouter } from 'next/navigation';
+
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  ordersAction, unmountOrderAction, clearOrderAction, ordersCostAction
-} from './action';
-import { RootState } from '../../store';
-import AppHeader from '../../../components/app-header';
+
 import {
   Button, Typography, Box, Grid, Card, CardContent, Container, Snackbar, CircularProgress, TextField
 } from '@mui/material';
@@ -14,9 +12,16 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
+
+import Alert from '@mui/material/Alert';
+
 import { webUrl } from '../../../shared/constants';
 import useAuth from '@components/withAuth';
-import Alert from '@mui/material/Alert';
+import AppHeader from '../../../components/app-header';
+import type { RootState } from '../../store';
+import {
+  ordersAction, unmountOrderAction, clearOrderAction, ordersCostAction
+} from './action';
 
 const OrderReport: React.FC = () => {
   const isAuthenticated = useAuth();
@@ -45,6 +50,7 @@ const OrderReport: React.FC = () => {
     } else {
       setPageNo((prevPageNo) => prevPageNo + 1);
     }
+
     setLoading(false);
   }, [dispatch, formData]);
 
@@ -53,7 +59,9 @@ const OrderReport: React.FC = () => {
       getPalletData(1);
       dispatch(ordersCostAction());
     }
-    return () => {
+
+    
+return () => {
       dispatch(unmountOrderAction());
     }
   }, [isAuthenticated]);
@@ -66,7 +74,8 @@ const OrderReport: React.FC = () => {
     };
 
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    
+return () => window.removeEventListener('scroll', handleScroll);
   }, [pageNo, hasMore, loading]);
 
   const onFieldChange = (name: string, value: string | null) => {

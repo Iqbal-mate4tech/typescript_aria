@@ -1,11 +1,14 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+
+import { useRouter } from 'next/navigation';
+
 import {
   Button, Card, CardContent, CardHeader, TextField, InputLabel, Grid, Fab, Typography, Box, CardActions
 } from '@mui/material';
-import { useRouter } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
+
 import AppHeader from '@/components/app-header';
 import {
   poAction, unmountPOAction, clearPOAction, poItemsAction, poMasterDataAction, uploadPOAction, receivePOAction
@@ -14,7 +17,7 @@ import SingleSelect from '@/components/single-select';
 import { getUserStore } from '@/shared/common';
 import { AppAlert } from '@/components/app-alert';
 import POQuantityModal from '@/components/po-quantity-modal';
-import { RootState } from '../../store';
+import type { RootState } from '../../store';
 
 const PurchaseOrder: React.FC = () => {
   const router = useRouter();
@@ -102,6 +105,7 @@ const PurchaseOrder: React.FC = () => {
         setDetailsToShowIndex(index);
       });
     }
+
     setItemDetailsToShowIndex(undefined);
   };
 
@@ -111,10 +115,12 @@ const PurchaseOrder: React.FC = () => {
 
   const poUploadClick = (e: React.MouseEvent, poId: number) => {
     e.stopPropagation();
+
     const data = {
       POID: poId,
       ReceivedBy: localStorage.getItem('userName'),
     };
+
     dispatch(uploadPOAction(data)).then((response: any) => {
       response && onSearchClick();
       setAlertMessage(response || 'Updation failed.');
@@ -166,7 +172,8 @@ const PurchaseOrder: React.FC = () => {
   const setStatus = (value: any) => {
     if (parseInt(value.QtyOrdered) === parseInt(value.QtyReceived)) return 'received-status';
     if (parseInt(value.QtyReceived) === 0) return 'not-received-status';
-    return 'variance-status';
+    
+return 'variance-status';
   };
 
   const poItemsData = () => {
