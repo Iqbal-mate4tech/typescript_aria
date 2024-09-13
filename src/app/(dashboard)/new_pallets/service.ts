@@ -1,4 +1,4 @@
-import { doGetRequest, doPostRequest, doOdooPostRequest, doOdooGetRequest } from '../../../shared/api/base-api';
+import { doGetRequest, doPostRequest, doOdooGetRequest } from '../../../shared/api/base-api';
 import { apiUrl } from '../../../shared/constants';
 import { stringformat } from '../../../shared/common';
 
@@ -31,9 +31,9 @@ export function receivePO(data: any): Promise<any> {
   return doPostRequest(apiUrl.receivePO, data);
 }
 
-export function validateStoreId(palletId: number, itoId: number): Promise<any> {
-  return doGetRequest(stringformat(apiUrl.getvalidatestoreid, [palletId, itoId]));
-}
+// export function validateStoreId(palletId: number, itoId: number): Promise<any> {
+//   return doGetRequest(stringformat(apiUrl.getvalidatestoreid, [palletId, itoId]));
+// }
 
 export function palletStatus(): Promise<any> {
   const userType = typeof window !== 'undefined' ? localStorage.getItem('userType') : null;

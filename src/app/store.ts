@@ -25,7 +25,7 @@ const rootReducer = combineReducers({
   purchaseOrder: purchaseOrderReducer,
   itotoggle: itotoggleReducer,
   receiveodoo: receiveodooReducer,
-  scanpo: scanpoReducer,
+  scanpo: scanpoReducer
 });
 
 // Initialize the store
