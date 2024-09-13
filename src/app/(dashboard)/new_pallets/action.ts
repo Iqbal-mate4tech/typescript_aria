@@ -3,7 +3,7 @@ import type { Dispatch } from 'redux';
 import {
     barcodeScanApi,
     updateQty,
-    validateStoreId,
+    // validateStoreId,
     palletStatus,
     pallets,
     palletStore,
@@ -143,29 +143,29 @@ return false;
     };
 };
 
-export const validateIdAction = (payload: any) => ({
-    type: actionTypes.VALIDATE_STORE_ID,
-    payload
-});
+// export const validateIdAction = (payload: any) => ({
+//     type: actionTypes.VALIDATE_STORE_ID,
+//     payload
+// });
 
-export const validateStoreIdAction = (pallet_id: number, ito_id: number) => {
-    return async (dispatch: Dispatch) => {
-        dispatch(showLoaderAction('validateStoreId'));
+// export const validateStoreIdAction = (pallet_id: number, ito_id: number) => {
+//     return async (dispatch: Dispatch) => {
+//         dispatch(showLoaderAction('validateStoreId'));
 
-        try {
-            const response = await validateStoreId(pallet_id, ito_id);
+//         try {
+//             const response = await validateStoreId(pallet_id, ito_id);
 
-            dispatch(stopLoaderAction('validateStoreId'));
-            dispatch(validateIdAction(response));
+//             dispatch(stopLoaderAction('validateStoreId'));
+//             dispatch(validateIdAction(response));
             
-return response;
-        } catch (error) {
-            dispatch(stopLoaderAction('validateStoreId'));
+// return response;
+//         } catch (error) {
+//             dispatch(stopLoaderAction('validateStoreId'));
             
-return false;
-        }
-    };
-};
+// return false;
+//         }
+//     };
+// };
 
 export const receivedPalletStatusAction = (payload: any) => ({
     type: actionTypes.PALLET_STATUS_RECEIVED,
