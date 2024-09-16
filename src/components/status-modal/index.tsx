@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {
-  Card, CardContent, Button,
+  Card, CardContent, CardHeader, Button,
   Dialog, DialogTitle, DialogContent, DialogActions,
   Grid, Typography
 } from '@mui/material';

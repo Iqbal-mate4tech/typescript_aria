@@ -3,7 +3,7 @@ export const messages = {
 };
 
 export const apiUrl = {
-    baseApiUrl: 'https://0b28-2409-4054-481-5571-a4a2-85f-7373-118a.ngrok-free.app',
+    baseApiUrl: 'https://cd68-2409-4054-11d-2421-6cbb-ee09-95f2-d769.ngrok-free.app',
     baseOdooApiUrl: 'https://test.askmonty.com.au/',
     userLogin: '/login',
     userLogout: '/userlogout',
@@ -63,12 +63,6 @@ export const apiUrl = {
     receivePOnew: '/rexreceiveponew',
     uploadPO: '/rexuploadpo',
     getPOStatusAndItemCount: '/rexgetpostatusanditemcount?id={0}',
-    getDIDdescription: '/diddescription?did_reference={0}&barcode={1}',
-    getITOdescription_new: '/itodescription?ito_reference={0}&barcode={1}',
-    
-    getDiDnumbervalid: '/didnumbervalid?did_number={0}',
-    getITOnumbervalid: '/itonumbervalid?ito_number={0}'
-    
 };
 
 export const webUrl = {

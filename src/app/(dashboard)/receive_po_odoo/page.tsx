@@ -5,21 +5,22 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import {
-  Button, Card, CardContent, TextField, Grid, Typography, Box,
+  Button, Card, CardContent,  TextField, Grid, Typography, Box,
 } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
+import {  useSelector } from 'react-redux';
 
 import AppHeader from '@/components/app-header';
 import {
   getPOIDdescriptionAction, AddPoItemsAction, receivePOAction, UpdateQtytoOdooAction
 } from './action';
-import type { RootState } from '../../store';
+import { useAppDispatch, type RootState } from '../../store';
 import POQuantityModal from '@/components/po-quantity-modal';
 import POQAdditemModal from '@/components/po-add-item-modal';
 import {AppAlert} from '@/components/app-alert';
 
+
 const ReceivePONewOdoo: React.FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const router = useRouter();
 
   const barcodeScan = useSelector((state: RootState) => state.receiveodoo.barcodeScan);

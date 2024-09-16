@@ -1,4 +1,4 @@
-  import type { Dispatch } from 'redux';
+import { AppDispatch} from '../../store';
 
 import {
     getPoid,
@@ -47,7 +47,7 @@ import {
   type BarcodeScanActionType = (payload: any) => BarcodeScanAction;
   
   // Define the thunk action types
-  type ThunkResult<R> = (dispatch: Dispatch<any>, getState: () => any) => R;
+  type ThunkResult<R> = (dispatch: AppDispatch, getState: () => any) => R;
   
   // Action creators
   export const setBarcodeScan: BarcodeScanActionType = (payload) => ({

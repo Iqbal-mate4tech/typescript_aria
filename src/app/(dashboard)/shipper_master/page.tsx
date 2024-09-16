@@ -5,20 +5,21 @@ import { useRouter } from "next/navigation";
 
 import { Card, CardContent, Grid, IconButton, Typography, Box, Container, Tooltip, Snackbar, Alert } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
-import { useDispatch, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 
 import AppHeader from "@components/app-header";
-import type { RootState } from "../../store"; // Adjust the import to match your store's file structure
+import { useAppDispatch, type RootState } from "../../store"; // Adjust the import to match your store's file structure
 import { addUpdateShipperAction, deleteShipperAction } from "../../action"; // Adjust these imports as needed
 import { palletShipperAction } from "../pallet/action";
 import { AppAlert } from "@components/app-alert";
 import MasterModal from "@components/master-modal"; // Adjust the imports as needed
 import useAuth from "@components/withAuth";
 
+
 const ShipperMaster: React.FC = () => {
   const isAuthenticated = useAuth();
   const router = useRouter();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const shipper = useSelector((state: RootState) => state.pallet.palletShipper);
 
   const [id, setId] = useState<number | undefined>(undefined);

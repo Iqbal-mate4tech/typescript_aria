@@ -6,15 +6,16 @@ import { useRouter } from 'next/navigation';
 import {
     Card, CardContent, Button, TextField, Typography, Grid, Container, Fab
 } from '@mui/material';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
-import type { RootState } from '../../store';
+import { useAppDispatch, type RootState } from '../../store';
 import {
   unmountPOAction, clearPOAction, poQuantityAction, receivePOAction, uploadPOAction, poStatusAndItemCountAction
 } from '../purchase_order/action';
 import POQuantityModal from '../../../components/po-quantity-modal';
 import {AppAlert} from '../../../components/app-alert';
 import AppHeader from '../../../components/app-header';
+
 
 const ReceivePO: React.FC = () => {
     const [searchData, setSearchData] = useState({ searchPOId: '', supplierSku: '', modal: {} });
@@ -33,7 +34,7 @@ const ReceivePO: React.FC = () => {
     const [showConfirm, setShowConfirm] = useState(false);
 
     const router = useRouter();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const poQuantity = useSelector((state: RootState) => state.purchaseOrder.poQuantity);
 
     useEffect(() => {

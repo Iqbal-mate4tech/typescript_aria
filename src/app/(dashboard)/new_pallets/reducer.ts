@@ -1,43 +1,35 @@
 import { actionTypes } from './action';
 
-// Define the shape of the state
-interface FormData {
-    palletIds: string[];
-}
-
-interface State {
-    data: any[]; // Specify correct data type if known
+/** Initial state type */
+interface PalletState {
+    data: any[];
     error: string | null;
-    formData: FormData;
-    palletStatus?: any; // Define specific type if known
-    palletCategory?: any; // Define specific type if known
-    palletStore?: any; // Define specific type if known
-    pallets?: any; // Define specific type if known
-    palletItems?: any[]; // Define specific type if known
-    palletBuilders?: any; // Define specific type if known
-    palletTypes?: any; // Define specific type if known
-    palletShipper?: any; // Define specific type if known
-    syncStatus?: any; // Define specific type if known
-    barcodeScan?: any[]; // Define specific type if known
-    barcodeScanPo?: any[]; // Define specific type if known
-    poQuantity?: any; // Define specific type if known
+    formData: {
+        palletIds: any[];
+    };
+    palletStatus?: any;
+    palletCategory?: any;
+    palletStore?: any;
+    pallets?: any;
+    palletItems?: any;
+    palletBuilders?: any;
+    palletTypes?: any;
+    palletShipper?: any;
+    syncStatus?: boolean;
+    barcodeScan?: any;
+    barcodeScanPo?: any;
+    poQuantity?: any;
 }
 
-// Define action payload types for each action
-interface Action {
-    type: string;
-    payload?: any; // Specify payload type for each action
-}
-
-// Initial state
-const initialState: State = {
+/** Initial state */
+const initialState: PalletState = {
     data: [],
     error: null,
     formData: { palletIds: [] },
 };
 
-// Reducer function
-export default (state = initialState, action: Action): State => {
+/** Reducer */
+const palletReducer = (state = initialState, action: { type: string; payload: any }): PalletState => {
     const { type, payload } = action;
 
     switch (type) {
@@ -158,14 +150,9 @@ export default (state = initialState, action: Action): State => {
                 error: null,
             };
 
-        case actionTypes.PALLET_STORE_RECEIVED:
-            return {
-                ...state,
-                palletStore: payload,
-                error: null,
-            };
-
         default:
             return state;
     }
 };
+
+export default palletReducer;

@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import {
   Button, Card, CardContent, CardHeader, TextField, InputLabel, Grid, Fab, Typography, Box, CardActions
 } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
+import {  useSelector } from 'react-redux';
 
 import AppHeader from '@/components/app-header';
 import {
@@ -17,11 +17,12 @@ import SingleSelect from '@/components/single-select';
 import { getUserStore } from '@/shared/common';
 import { AppAlert } from '@/components/app-alert';
 import POQuantityModal from '@/components/po-quantity-modal';
-import type { RootState } from '../../store';
+import { useAppDispatch, type RootState } from '../../store';
+
 
 const PurchaseOrder: React.FC = () => {
   const router = useRouter();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const [detailsToShowIndex, setDetailsToShowIndex] = useState<number | undefined>(undefined);
   const [itemDetailsToShowIndex, setItemDetailsToShowIndex] = useState<number | undefined>(undefined);

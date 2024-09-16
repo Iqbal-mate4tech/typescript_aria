@@ -1,4 +1,4 @@
-import type { Dispatch } from 'redux';
+import { AppDispatch} from '../../store';
 
 import { palletStoreAction, palletShipperAction, receivedPalletsAction } from '../pallet/action';
 import { palletByStatus, updatePalletShippingStatus } from '../pallet/service';
@@ -14,14 +14,14 @@ interface UpdatePalletShippingStatusData {
 }
 
 export const palletBookingMasterDataAction = () => {
-  return (dispatch: Dispatch) => {
+  return (dispatch: AppDispatch) => {
     dispatch(palletShipperAction());
     dispatch(palletStoreAction());
   };
 };
 
 export const palletByStatusAction = (data: PalletByStatusData) => {
-  return async (dispatch: Dispatch, getState: () => any) => {
+  return async (dispatch: AppDispatch, getState: () => any) => {
     if (data.page < 2) {
       dispatch(showLoaderAction('palletByStatus'));
     }
@@ -54,7 +54,7 @@ return false;
 };
 
 export const updatePalletShippingStatusAction = (data: UpdatePalletShippingStatusData) => {
-  return async (dispatch: Dispatch) => {
+  return async (dispatch: AppDispatch) => {
     dispatch(showLoaderAction('updatePalletShippingStatus'));
 
     try {

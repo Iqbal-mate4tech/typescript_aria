@@ -4,16 +4,16 @@ import React from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import { AppBar, Toolbar, IconButton, Typography, Box } from '@mui/material';
+import { AppBar, Toolbar, IconButton, Typography, Menu, MenuItem, Box, Button } from '@mui/material';
 import {
-  Add as AddIcon, Home as HomeIcon, 
-  Call as CallIcon, BusAlert as BusIcon,  
-  Sync as SyncIcon, Upload as UploadIcon,  
-   FlashOn as FlashOnIcon, 
-  FlashOff as FlashOffIcon,  Refresh as RefreshIcon
+  Add as AddIcon, Home as HomeIcon, PowerSettingsNew as PowerIcon, Wallet as WalletIcon, 
+  Call as CallIcon, BusAlert as BusIcon, Person as PersonIcon, Album as AlbumIcon, 
+  Sync as SyncIcon, Upload as UploadIcon, AirplanemodeActive as AirplaneIcon, 
+  Bookmark as BookmarkIcon, People as PeopleIcon, FlashOn as FlashOnIcon, 
+  FlashOff as FlashOffIcon, BusinessCenter as BusinessCenterIcon, Refresh as RefreshIcon
 } from '@mui/icons-material';
 
-// import { hasPermission } from '../../shared/common';
+import { hasPermission } from '../../shared/common';
 import { webUrl } from '../../shared/constants';
 
 interface AppHeaderProps {
@@ -36,7 +36,9 @@ interface AppHeaderProps {
   onProductSyncClick?: () => void;
   onAddClick?: () => void;
   onReloadClick?: () => void;
+  redirectTo?: (url: string) => void;
 }
+
 
 const AppHeader: React.FC<AppHeaderProps> = (props) => {
   const router = useRouter();
@@ -53,6 +55,87 @@ const AppHeader: React.FC<AppHeaderProps> = (props) => {
 
   return (
     <>
+      {/* Menu Drawer */}
+      {/* <Menu
+        id="app-menu"
+        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+        keepMounted
+        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+        open={false} // Control this with state if you want the menu to be toggled
+        onClose={() => {}}
+      >
+        <MenuItem disabled>
+          <PersonIcon />
+          <Typography variant="body1" className="ml-2">{localStorage.getItem('user')}</Typography>
+        </MenuItem>
+        <MenuItem>
+          <Typography variant="body1" className="ml-2">({localStorage.getItem('userName')})</Typography>
+        </MenuItem>
+        <MenuItem onClick={() => router.push(webUrl.pallet)}>
+          <WalletIcon />
+          <Typography variant="body1" className="ml-2">Pallets</Typography>
+        </MenuItem>
+        <MenuItem onClick={() => router.push(webUrl.palletnew)}>
+          <WalletIcon />
+          <Typography variant="body1" className="ml-2">New Pallets</Typography>
+        </MenuItem>
+        {hasPermission('OrderReport') && (
+          <MenuItem onClick={() => router.push(webUrl.estore)}>
+            <AlbumIcon />
+            <Typography variant="body1" className="ml-2">Estore</Typography>
+          </MenuItem>
+        )}
+        {hasPermission('Product') && (
+          <MenuItem onClick={() => router.push(webUrl.product)}>
+            <HomeIcon />
+            <Typography variant="body1" className="ml-2">Product</Typography>
+          </MenuItem>
+        )}
+        {hasPermission('ShipperMaster') && (
+          <MenuItem onClick={() => router.push(webUrl.shipper)}>
+            <AirplaneIcon />
+            <Typography variant="body1" className="ml-2">Shipper Master</Typography>
+          </MenuItem>
+        )}
+        {hasPermission('PalletTypeMaster') && (
+          <MenuItem onClick={() => router.push(webUrl.palletType)}>
+            <BookmarkIcon />
+            <Typography variant="body1" className="ml-2">Pallet Type Master</Typography>
+          </MenuItem>
+        )}
+        {hasPermission('UserMaster') && (
+          <MenuItem onClick={() => router.push(webUrl.user)}>
+            <PeopleIcon />
+            <Typography variant="body1" className="ml-2">User Master</Typography>
+          </MenuItem>
+        )}
+        {hasPermission('CategoryMaster') && (
+          <MenuItem onClick={() => router.push(webUrl.category)}>
+            <HomeIcon />
+            <Typography variant="body1" className="ml-2">Category Master</Typography>
+          </MenuItem>
+        )}
+        <MenuItem onClick={() => router.push(webUrl.purchaseOrder)}>
+          <BusinessCenterIcon />
+          <Typography variant="body1" className="ml-2">Purchase Order</Typography>
+        </MenuItem>
+        <MenuItem onClick={() => router.push(webUrl.receivePO)}>
+          <BusinessCenterIcon />
+          <Typography variant="body1" className="ml-2">Receive PO</Typography>
+        </MenuItem>
+        <MenuItem onClick={() => router.push(webUrl.receivePONew)}>
+          <BusinessCenterIcon />
+          <Typography variant="body1" className="ml-2">Receive PO New</Typography>
+        </MenuItem>
+        <MenuItem onClick={() => router.push(webUrl.receivePONewodoo)}>
+          <BusinessCenterIcon />
+          <Typography variant="body1" className="ml-2">Receive PO Odoo</Typography>
+        </MenuItem>
+        <MenuItem onClick={handleSignOut}>
+          <PowerIcon />
+          <Typography variant="body1" className="ml-2">Sign Out</Typography>
+        </MenuItem>
+      </Menu> */}
 
       {/* App Header */}
       <AppBar position="static" className='mb-12 rounded-lg p-2'>

@@ -1,4 +1,5 @@
-import type { Dispatch } from 'redux';
+// import type { Dispatch } from 'redux';
+import { AppDispatch} from '../../store';
 
 import { getOnlineOrders, getOnlineOrdersCost } from './service';
 import { showLoaderAction, stopLoaderAction } from '../user_master/action';
@@ -41,7 +42,7 @@ export const receivedOrdersAction = (payload: OrdersResponse[]) => ({
 });
 
 export const ordersAction = (data: OrdersActionData) => {
-  return async (dispatch: Dispatch, getState: () => any) => {
+  return async (dispatch: AppDispatch, getState: () => any) => {
     if (data.page < 2) {
       dispatch(showLoaderAction('orders'));
     }
@@ -75,14 +76,18 @@ export const ordersAction = (data: OrdersActionData) => {
 
       dispatch(receivedOrdersAction(parsedResponse));
       
-return true;
+return parsedResponse;
+      
+// return true;
     } catch (error) {
       if (data.page < 2) {
         dispatch(stopLoaderAction('orders'));
       }
 
       
-return false;
+return []; 
+      
+// return false;
     }
   };
 };
@@ -101,7 +106,7 @@ export const receivedOrdersCostAction = (payload: OrderCostResponse) => ({
 });
 
 export const ordersCostAction = () => {
-  return async (dispatch: Dispatch) => {
+  return async (dispatch: AppDispatch) => {
     try {
       const response = await getOnlineOrdersCost();
 

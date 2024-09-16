@@ -1,5 +1,5 @@
 // src/containers/purchase-order/action.ts
-  import type { Dispatch } from 'redux';
+import { AppDispatch} from '../../store';
 
 import {
     poItems,
@@ -36,7 +36,7 @@ import {
   });
   
   export const poAction = (data: any) => {
-    return async (dispatch: Dispatch, getState: () => any) => {
+    return async (dispatch: AppDispatch, getState: () => any) => {
       if (data && data.page < 2) dispatch(showLoaderAction('poItems'));
   
       try {
@@ -75,7 +75,7 @@ return false;
   });
   
   export const poItemsAction = (id: string) => {
-    return async (dispatch: Dispatch) => {
+    return async (dispatch: AppDispatch) => {
       dispatch(showLoaderAction('pOItems'));
   
       try {
@@ -90,7 +90,7 @@ return false;
   };
   
   export const poMasterDataAction = () => {
-    return (dispatch: Dispatch) => {
+    return (dispatch: AppDispatch) => {
       dispatch(poStatusAction());
       dispatch(poStoreAction());
     };
@@ -102,7 +102,7 @@ return false;
   });
   
   export const poStatusAction = () => {
-    return async (dispatch: Dispatch) => {
+    return async (dispatch: AppDispatch) => {
       dispatch(showLoaderAction('poStatus'));
   
       try {
@@ -122,7 +122,7 @@ return false;
   });
   
   export const poStoreAction = () => {
-    return async (dispatch: Dispatch) => {
+    return async (dispatch: AppDispatch) => {
       dispatch(showLoaderAction('poStore'));
   
       try {
@@ -142,7 +142,7 @@ return false;
   });
   
   export const poQuantityAction = (data: { searchPOId: string; supplierSku: string }) => {
-    return async (dispatch: Dispatch) => {
+    return async (dispatch: AppDispatch) => {
       dispatch(showLoaderAction('poQuantity'));
   
       try {
@@ -161,7 +161,7 @@ return false;
   };
   
   export const receivePOAction = (data: any) => {
-    return async (dispatch: Dispatch) => {
+    return async (dispatch: AppDispatch) => {
       dispatch(showLoaderAction('receivePO'));
   
       try {
@@ -179,7 +179,7 @@ return false;
   };
   
   export const uploadPOAction = (data: any) => {
-    return async (dispatch: Dispatch) => {
+    return async (dispatch: AppDispatch) => {
       dispatch(showLoaderAction('uploadPO'));
   
       try {
@@ -197,7 +197,7 @@ return false;
   };
   
   export const poStatusAndItemCountAction = (data: string) => {
-    return async (dispatch: Dispatch) => {
+    return async (dispatch: AppDispatch) => {
       dispatch(showLoaderAction('poStatusAndItemCount'));
   
       try {

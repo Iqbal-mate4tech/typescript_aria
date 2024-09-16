@@ -3,16 +3,15 @@ import React from 'react';
 
 import { useRouter } from 'next/navigation';
 
-// import {  useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Card, CardHeader, Typography, Container } from '@mui/material';
 
-// import { RootState } from '../../store'; // Adjust the path as necessary
+import { RootState } from '../../store'; // Adjust the path as necessary
 import AppHeader from '../../../components/app-header';
 
 const Distribution: React.FC = () => {
     const router = useRouter();
-
-    // const dispatch = useDispatch();
+    const dispatch = useDispatch();
 
     return (
         <Container>

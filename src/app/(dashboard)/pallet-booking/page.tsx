@@ -5,14 +5,14 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { Card, CardContent, Button, TextField, Typography, Checkbox, Grid, TextareaAutosize, CircularProgress, Box } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
+import {  useSelector } from 'react-redux';
 
 import {
   palletsAction, palletItemsAction, unmountPalletsAction,
   clearPalletsAction, clearFormData, updatePalletFormData
 } from '../pallet/action';
 import { palletBookingMasterDataAction, updatePalletShippingStatusAction, palletByStatusAction } from './action';
-import type { RootState, AppDispatch } from '../../store';
+import { type RootState,  useAppDispatch } from '../../store';
 import AppHeader from '@components/app-header';
 import { AppAlert } from '@components/app-alert';
 import SingleSelect from '@components/single-select';
@@ -20,9 +20,10 @@ import { webUrl } from '../../../shared/constants';
 import { hasPermission } from '../../../shared/common';
 import useAuth from '@components/withAuth';
 
+
 const PalletBooking: React.FC = () => {
   const router = useRouter();
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const isAuthenticated = useAuth();
 
   const [detailsToShowIndex, setDetailsToShowIndex] = useState<number | undefined>(undefined);

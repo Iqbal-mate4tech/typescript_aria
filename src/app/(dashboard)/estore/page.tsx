@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import { useDispatch, useSelector } from 'react-redux';
+import {  useSelector } from 'react-redux';
 
 import {
   Button, Typography, Box, Grid, Card, CardContent, Container, Snackbar, CircularProgress, TextField
@@ -18,7 +18,7 @@ import Alert from '@mui/material/Alert';
 import { webUrl } from '../../../shared/constants';
 import useAuth from '@components/withAuth';
 import AppHeader from '../../../components/app-header';
-import type { RootState } from '../../store';
+import { useAppDispatch, type RootState } from '../../store';
 import {
   ordersAction, unmountOrderAction, clearOrderAction, ordersCostAction
 } from './action';
@@ -26,7 +26,7 @@ import {
 const OrderReport: React.FC = () => {
   const isAuthenticated = useAuth();
   const router = useRouter();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const orders = useSelector((state: RootState) => state.order.orders || []);
   const ordersCost = useSelector((state: RootState) => state.order.ordersCost);
 
@@ -45,7 +45,7 @@ const OrderReport: React.FC = () => {
     const request = { page, ...formData };
     const response = await dispatch(ordersAction(request));
 
-    if (response && response.length === 0) {
+    if (Array.isArray(response) && response.length === 0) {
       setHasMore(false); // No more data to load
     } else {
       setPageNo((prevPageNo) => prevPageNo + 1);

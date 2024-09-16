@@ -5,9 +5,10 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 import {
-  Button, Card, CardContent, Typography, Grid, TextField, Box
+  Button, Card, CardHeader, CardContent, Typography, Grid, TextField, Box, Switch,
+  Dialog, DialogActions, DialogContent, DialogTitle
 } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
+import {  useSelector } from 'react-redux';
 
 import BarcodeReader from 'react-barcode-reader';
 
@@ -17,10 +18,11 @@ import  AppHeader  from '@/components/app-header';
 import {
   getPOIDDescriptionAction, addPoItemsAction, receivePOAction
 } from './action';
-import type { RootState } from '../../store';
+import { useAppDispatch, type RootState } from '../../store';
 import { AppAlert } from '@/components/app-alert';
 import POQuantityModal from '@/components/po-quantity-modal';
 import POQAdditemModal from '@/components/po-add-item-modal';
+
 
 const ReceiveItotoggle: React.FC = () => {
   const [searchData, setSearchData] = useState({ modal: {} });
@@ -42,7 +44,7 @@ const ReceiveItotoggle: React.FC = () => {
   const [cartonqty, setCartonqty] = useState<number | false>(false);
   const [innerqty, setInnerqty] = useState<number | false>(false);
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const router = useRouter();
   const barcodeScan = useSelector((state: RootState) => state.itotoggle?.barcodeScan || []);  const userName = localStorage.getItem('userName') || '';
 

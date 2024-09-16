@@ -5,11 +5,10 @@ import React, { useState, useEffect } from 'react';
 import { useRouter,usePathname } from 'next/navigation';
 
 import {
-  Card, CardContent, CardHeader, Typography, Button, TextField, Grid, IconButton, 
-  Fab, Tooltip
+  Card, CardContent, CardHeader,  Typography, Button, TextField, Grid, IconButton, Fab, Tooltip,
 } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import {
   palletsAction, unmountPalletsAction, palletsMasterDataAction,
@@ -19,17 +18,19 @@ import {
 } from './action';
 import  AppHeader  from '@/components/app-header';
 import  SingleSelect  from '@/components/single-select';
-import  {PalletItemModal}  from '@/components/pallet-item-modal';
+import  PalletItemModal  from '@/components/pallet-item-modal';
 import { AppAlert } from '@/components/app-alert';
 import  StatusModal  from '@/components/status-modal';
 import { getUtcDateTime, hasPermission, isValidStatusToChange, 
   getUserStore, getDayDiff, setItemStatusColor, convertTZ } from '../../../shared/common';
 import { webUrl, config } from '../../../shared/constants';
 import { printLabel } from './label';
+import { useAppDispatch } from '@/app/store';
+
 
 const Pallet: React.FC = () => {
   const router = useRouter();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const [detailsToShowIndex, setDetailsToShowIndex] = useState<number | undefined>(undefined);
   const [itemDetailsToShowIndex, setItemDetailsToShowIndex] = useState<number | undefined>(undefined);

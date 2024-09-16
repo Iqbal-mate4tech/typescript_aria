@@ -9,7 +9,7 @@ import {
   Card, CardContent, Button, Typography, Grid, TextField, IconButton, Checkbox, InputLabel, Dialog, DialogActions, DialogContent, DialogTitle
 } from '@mui/material';
 import { FlashOn, FlashOff, Edit, ArrowBack, ArrowForward } from '@mui/icons-material';
-import { useDispatch, useSelector } from 'react-redux';
+import {  useSelector } from 'react-redux';
 
 import { webUrl } from '@/shared/constants';
 import AppHeader from '@/components/app-header';
@@ -18,10 +18,12 @@ import {AppAlert} from '@/components/app-alert';
 import ProductUpdateModal from '@/components/product-update-modal';
 import { productAction, unmountProductAction, productTypeAction, clearProductFormData, updateProductFormData, clearProductAction, updateProductAction, updateProductDescriptionAction, syncProductsAction } from './action';
 import { uploadFilesToS3 } from './file-uploader';
+import { useAppDispatch } from '@/app/store';
+
 
 const Product = () => {
   const router = useRouter();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   
   const [pageNo, setPageNo] = useState(1);

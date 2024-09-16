@@ -1,4 +1,4 @@
-import type { Dispatch } from 'redux';
+import { AppDispatch} from '../../store';
 
 import {
     barcodeScanApi,
@@ -58,7 +58,7 @@ export const setBarcodeScan = (payload: any) => ({
 });
 
 export const getITODescriptionAction = (itoNumber: string) => {
-    return async (dispatch: Dispatch) => {
+    return async (dispatch: AppDispatch) => {
         dispatch(showLoaderAction('barcodeScan'));
 
         try {
@@ -86,7 +86,7 @@ export const setBarcodeScanPO = (payload: any) => ({
 });
 
 export const getPODescriptionAction = (itoNumber: string) => {
-    return async (dispatch: Dispatch) => {
+    return async (dispatch: AppDispatch) => {
         dispatch(showLoaderAction('barcodeScanPo'));
 
         try {
@@ -109,7 +109,7 @@ return false;
 };
 
 export const receivePOAction = (data: any) => {
-    return async (dispatch: Dispatch) => {
+    return async (dispatch: AppDispatch) => {
         dispatch(showLoaderAction('receivePO'));
 
         try {
@@ -127,7 +127,7 @@ return false;
 };
 
 export const updateCartonQtyAction = (data: any) => {
-    return async (dispatch: Dispatch) => {
+    return async (dispatch: AppDispatch) => {
         dispatch(showLoaderAction('updateQty'));
 
         try {
@@ -144,10 +144,10 @@ return false;
     };
 };
 
-// export const validateIdAction = (payload: any) => ({
-//     type: actionTypes.VALIDATE_STORE_ID,
-//     payload
-// });
+export const validateIdAction = (payload: any) => ({
+    type: actionTypes.VALIDATE_STORE_ID,
+    payload
+});
 
 // export const validateStoreIdAction = (pallet_id: number, ito_id: number) => {
 //     return async (dispatch: Dispatch) => {
@@ -155,15 +155,12 @@ return false;
 
 //         try {
 //             const response = await validateStoreId(pallet_id, ito_id);
-
 //             dispatch(stopLoaderAction('validateStoreId'));
 //             dispatch(validateIdAction(response));
-            
-// return response;
+//             return response;
 //         } catch (error) {
 //             dispatch(stopLoaderAction('validateStoreId'));
-            
-// return false;
+//             return false;
 //         }
 //     };
 // };
@@ -174,7 +171,7 @@ export const receivedPalletStatusAction = (payload: any) => ({
 });
 
 export const palletStatusAction = () => {
-    return async (dispatch: Dispatch) => {
+    return async (dispatch: AppDispatch) => {
         dispatch(showLoaderAction('palletStatus'));
 
         try {
@@ -194,7 +191,7 @@ export const receivedPalletStoreAction = (payload: any) => ({
 });
 
 export const palletStoreAction = () => {
-    return async (dispatch: Dispatch) => {
+    return async (dispatch: AppDispatch) => {
         dispatch(showLoaderAction('palletStore'));
 
         try {
@@ -214,7 +211,7 @@ export const receivedPalletCategoryAction = (payload: any) => ({
 });
 
 export const palletCategoryAction = () => {
-    return async (dispatch: Dispatch) => {
+    return async (dispatch: AppDispatch) => {
         dispatch(showLoaderAction('palletCategory'));
 
         try {
@@ -234,7 +231,7 @@ export const receivedPalletsAction = (payload: any) => ({
 });
 
 export const palletsAction = (data: any) => {
-    return async (dispatch: Dispatch, getState: any) => {
+    return async (dispatch: AppDispatch, getState: any) => {
         if (data && data.page < 2) {
             dispatch(showLoaderAction('pallets'));
         }
@@ -272,7 +269,7 @@ export const unmountPalletsAction = () => ({
 });
 
 export const palletsMasterDataAction = () => {
-    return (dispatch: Dispatch) => {
+    return (dispatch: AppDispatch) => {
         dispatch(palletStoreAction());
         dispatch(palletCategoryAction());
         dispatch(palletStatusAction());
@@ -289,7 +286,7 @@ export const receivedPalletItemsAction = (payload: any) => ({
 });
 
 export const palletItemsAction = (id: number) => {
-    return async (dispatch: Dispatch) => {
+    return async (dispatch: AppDispatch) => {
         dispatch(showLoaderAction('palletItems'));
 
         try {
@@ -309,7 +306,7 @@ export const receivedPalletTypesAction = (payload: any) => ({
 });
 
 export const palletTypesAction = () => {
-    return async (dispatch: Dispatch) => {
+    return async (dispatch: AppDispatch) => {
         dispatch(showLoaderAction('palletTypes'));
 
         try {
@@ -329,7 +326,7 @@ export const receivedPalletBuildersAction = (payload: any) => ({
 });
 
 export const palletBuildersAction = () => {
-    return async (dispatch: Dispatch) => {
+    return async (dispatch: AppDispatch) => {
         dispatch(showLoaderAction('palletBuilders'));
 
         try {
@@ -344,7 +341,7 @@ export const palletBuildersAction = () => {
 };
 
 export const addUpdatePalletsMasterDataAction = () => {
-    return (dispatch: Dispatch) => {
+    return (dispatch: AppDispatch) => {
         dispatch(palletTypesAction());
         dispatch(palletBuildersAction());
     };
@@ -360,7 +357,7 @@ export const unMountAddUpdateData = () => ({
 });
 
 export const savePalletAction = (data: any) => {
-    return async (dispatch: Dispatch) => {
+    return async (dispatch: AppDispatch) => {
         dispatch(showLoaderAction('savePallet'));
 
         try {
@@ -377,7 +374,7 @@ return false;
 };
 
 export const updatePalletAction = (data: any) => {
-    return async (dispatch: Dispatch) => {
+    return async (dispatch: AppDispatch) => {
         dispatch(showLoaderAction('updatePallet'));
 
         try {
@@ -394,7 +391,7 @@ return false;
 };
 
 export const savePalletItemAction = (data: any) => {
-    return async (dispatch: Dispatch) => {
+    return async (dispatch: AppDispatch) => {
         dispatch(showLoaderAction('savePalletItem'));
 
         try {
@@ -411,7 +408,7 @@ return false;
 };
 
 export const deletePalletAction = (data: number) => {
-    return async (dispatch: Dispatch) => {
+    return async (dispatch: AppDispatch) => {
         dispatch(showLoaderAction('deletePallet'));
 
         try {
@@ -428,7 +425,7 @@ return false;
 };
 
 export const deletePalletItemAction = (data: number) => {
-    return async (dispatch: Dispatch) => {
+    return async (dispatch: AppDispatch) => {
         dispatch(showLoaderAction('deletePalletItem'));
 
         try {
@@ -445,7 +442,7 @@ return false;
 };
 
 export const updatePalletItemAction = (data: any) => {
-    return async (dispatch: Dispatch) => {
+    return async (dispatch: AppDispatch) => {
         dispatch(showLoaderAction('updatePalletItem'));
 
         try {
@@ -467,7 +464,7 @@ export const receivedPalletShipperAction = (payload: any) => ({
 });
 
 export const palletShipperAction = () => {
-    return async (dispatch: Dispatch) => {
+    return async (dispatch: AppDispatch) => {
         dispatch(showLoaderAction('palletShipper'));
 
         try {
@@ -518,7 +515,7 @@ return response;
 };
 
 export const syncPriceAction = () => {
-    return async (dispatch: Dispatch) => {
+    return async (dispatch: AppDispatch) => {
         dispatch(setSyncStatus(true));
 
         try {
@@ -531,7 +528,7 @@ export const syncPriceAction = () => {
 };
 
 export const syncPriceStatusAction = () => {
-    return async (dispatch: Dispatch) => {
+    return async (dispatch: AppDispatch) => {
         try {
             const response = await syncPriceStatus();
 

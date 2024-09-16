@@ -6,20 +6,29 @@ import { useRouter } from 'next/navigation';
 
 import { Card, CardContent, Grid, IconButton, Typography, Tooltip, Snackbar, Alert, Container, Box } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
-import type { RootState } from '@/app/store';
+import { useAppDispatch, type RootState } from '@/app/store';
 import useAuth from '@/components/withAuth';
-import AppHeader from '@/components/app-header';
-import MasterModal from '@/components/master-modal';
+import  AppHeader  from '@/components/app-header';
+import  MasterModal  from '@/components/master-modal';
 import { AppAlert } from '@/components/app-alert';
 import { palletCategoryAction } from '../pallet/action';
 import { deleteCategoryAction, addUpdateCategoryAction } from '../../action';
 
+interface CategoryRequest {
+  category_name: string;
+  category_id?: number;
+}
+
+
+
+
+
 const CategoryMaster: React.FC = () => {
   const isAuthenticated = useAuth();
   const router = useRouter();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const category = useSelector((state: RootState) => state.pallet.palletCategory);
 
   const [id, setId] = useState<number | undefined>(undefined);
@@ -49,9 +58,11 @@ const CategoryMaster: React.FC = () => {
   };
 
   const onDoneClick = async () => {
-    const request: any = { category_name: name }; // Explicitly typing request as any
+    const request: CategoryRequest = { category_name: name };
 
-    if (id) request.category_id = id;
+    if (id) {
+      request.category_id = id;
+    }
 
     const response = await dispatch(addUpdateCategoryAction(request));
 
@@ -65,18 +76,36 @@ const CategoryMaster: React.FC = () => {
     }
   };
 
-  const onDeleteClick = async () => {
-    const response = await dispatch(deleteCategoryAction(id));
+  // const onDeleteClick = async () => {
+  //   const response = await dispatch(deleteCategoryAction(id));
 
-    if (response) {
-      setShowConfirm(false);
-      dispatch(palletCategoryAction());
-      showFlashMessage('Category deleted successfully!', 'success');
+  //   if (response) {
+  //     setShowConfirm(false);
+  //     dispatch(palletCategoryAction());
+  //     showFlashMessage('Category deleted successfully!', 'success');
+  //   } else {
+  //     setAlertMessage('Deletion failed.');
+  //     setShowAlert(true);
+  //   }
+  // };
+  const onDeleteClick = async () => {
+    if (id !== undefined) {
+      const response = await dispatch(deleteCategoryAction(id));
+  
+      if (response) {
+        setShowConfirm(false);
+        dispatch(palletCategoryAction());
+        showFlashMessage('Category deleted successfully!', 'success');
+      } else {
+        setAlertMessage('Deletion failed.');
+        setShowAlert(true);
+      }
     } else {
-      setAlertMessage('Deletion failed.');
+      setAlertMessage('ID is undefined. Cannot delete.');
       setShowAlert(true);
     }
   };
+  
 
   const showFlashMessage = (message: string, severity: 'success' | 'error') => {
     setFlashMessage(message);

@@ -3,12 +3,12 @@ import React, { useState, useEffect } from "react";
 
 import { useRouter } from "next/navigation";
 
-import { useDispatch, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 
 import { IconButton, Card, CardContent, Typography, Grid, Tooltip, Box, Container, Snackbar, Alert } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
 
-import type { RootState } from "@/app/store";
+import { useAppDispatch, type RootState } from "@/app/store";
 import AppHeader from "@/components/app-header";
 import MasterModal from "@/components/master-modal";
 import {AppAlert} from "@/components/app-alert";
@@ -19,7 +19,7 @@ import useAuth from "@components/withAuth";
 const PalletTypeMaster: React.FC = () => {
   const isAuthenticated = useAuth();
   const router = useRouter();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const types = useSelector((state: RootState) => state.pallet.palletTypes);
 
   const [id, setId] = useState<number | undefined>(undefined);

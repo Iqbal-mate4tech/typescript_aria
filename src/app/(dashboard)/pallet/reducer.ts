@@ -1,39 +1,30 @@
 import { actionTypes } from './action';
 
-// Define the types for your state
 interface PalletState {
-    data: any[]; // Update this with the actual data structure you are using
+    data: any[];
     error: string | null;
-    palletStatus?: any; // Update with the actual type
-    palletCategory?: any; // Update with the actual type
-    palletStore?: any; // Update with the actual type
-    pallets?: any; // Update with the actual type
-    palletItems?: any[]; // Update with the actual type
-    palletBuilders?: any; // Update with the actual type
-    palletTypes?: any; // Update with the actual type
-    palletShipper?: any; // Update with the actual type
     formData: {
-        palletIds: any[]; // Update with the actual type
-        [key: string]: any; // This allows dynamic fields to be added to formData
+        palletIds: any[];
+        [key: string]: any;
     };
+    palletStatus?: any;
+    palletCategory?: any;
+    palletStore?: any;
+    pallets?: any;
+    palletItems?: any;
+    palletBuilders?: any;
+    palletTypes?: any;
+    palletShipper?: any;
     syncStatus?: boolean;
 }
 
-// Define the initial state with proper types
 const initialState: PalletState = {
     data: [],
     error: null,
-    formData: { palletIds: [] },
+    formData: { palletIds: [] }
 };
 
-// Define the type of action object
-interface Action {
-    type: string;
-    payload?: any; // This should be updated to match the specific payloads for each action type
-}
-
-/** Reducers */
-export default function palletReducer(state = initialState, action: Action): PalletState {
+const palletReducer = (state = initialState, action: any): PalletState => {
     const { type, payload } = action;
 
     switch (type) {
@@ -136,4 +127,6 @@ export default function palletReducer(state = initialState, action: Action): Pal
         default:
             return state;
     }
-}
+};
+
+export default palletReducer;

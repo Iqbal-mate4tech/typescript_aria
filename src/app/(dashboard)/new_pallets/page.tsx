@@ -1,29 +1,26 @@
-"use client"
-
-import React, { useState , ClipboardEvent } from "react";
-
+"use client";
+import type { ClipboardEvent } from "react";
+import React, { useState } from "react";
 
 import { useRouter } from "next/navigation";
 
 import {
+  Box,
   Card,
   CardContent,
   CardHeader,
   Button,
   Grid,
   Typography,
-  Box,
 } from "@mui/material";
-import type { ConnectedProps } from "react-redux";
-import { connect } from "react-redux";
+import {  useSelector } from "react-redux";
 
-import  AppHeader  from "../../../components/app-header";
+
+import AppHeader from "../../../components/app-header";
 import {
   getITODescriptionAction,
   updateCartonQtyAction,
   palletsAction,
-
-  // validateStoreIdAction,
   unmountPalletsAction,
   palletsMasterDataAction,
   syncPriceStatusAction,
@@ -31,38 +28,13 @@ import {
   receivePOAction,
   getPODescriptionAction,
 } from "./action";
-import { AppAlert } from "../../../components/app-alert";
-import type { RootState } from "../../store";
+import { useAppDispatch, type RootState } from "../../store";
+import {AppAlert} from "../../../components/app-alert";
 
-const mapStateToProps = (state: RootState) => ({
-  barcodeScan: state.itotoggle.barcodeScan,
-  barcodeScanPo: state.scanpo.barcodeScanPo,
-  pallets: state.itotoggle.pallets,
-  palletStore: state.itotoggle.palletStore,
-  palletCategory: state.itotoggle.palletCategory,
-});
+const PalletNew: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const router = useRouter();
 
-const mapDispatchToProps = {
-  palletsMasterDataAction,
-  barcodeScanApi: getITODescriptionAction,
-  getPoid: getPODescriptionAction,
-  palletsAction,
-
-  // validateStoreId: validateStoreIdAction,
-  syncPriceStatusAction,
-  unmountPalletsAction,
-  updateFormData: updatePalletFormData,
-  receivePOAction,
-  updateQty: updateCartonQtyAction,
-};
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-type PalletNewProps = PropsFromRedux;
-
-const PalletNew: React.FC<PalletNewProps> = (props) => {
   const [toggle, setToggle] = useState<boolean>(false);
   const [ito, setIto] = useState<string | false>(false);
 
@@ -76,16 +48,29 @@ const PalletNew: React.FC<PalletNewProps> = (props) => {
 
   const [poid, setPoid] = useState<string | false>(false);
   const [screen, setScreen] = useState<number>(1);
-  const router = useRouter();
 
-  const handleKeyDown = (event: React.ClipboardEvent<HTMLDivElement>) => {
+  // Redux state selectors
+  const barcodeScan = useSelector((state: RootState) => state.pallet.barcodeScan);
+  const barcodeScanPo = useSelector((state: RootState) => state.pallet.barcodeScanPo);
+
+  // Action dispatchers
+  const handleUnmount = () => dispatch(unmountPalletsAction());
+
+  const fetchPalletsData = () => {
+    dispatch(palletsMasterDataAction());
+    dispatch(palletsAction({ page: 1 }));
+    dispatch(syncPriceStatusAction());
+  };
+
+  const handleFormUpdate = (data: any) => dispatch(updatePalletFormData(data));
+
+  const handleKeyDown = (event: ClipboardEvent<HTMLDivElement>) => {
     event.preventDefault();
     const pasteValue = event.clipboardData.getData("Text");
 
     if (pasteValue) {
       if (screen === 3) {
-        // Scan ITO
-        props.barcodeScanApi(pasteValue).then((response) => {
+        dispatch(getITODescriptionAction(pasteValue)).then((response) => {
           if (response) {
             setIto(pasteValue);
             setToggle(true);
@@ -101,8 +86,7 @@ const PalletNew: React.FC<PalletNewProps> = (props) => {
           }
         });
       } else if (screen === 2) {
-        // Handle ITO barcode scan
-        const result = props.barcodeScan.find((item) => item.SKU === pasteValue);
+        const result = barcodeScan?.find((item) => item.SKU === pasteValue);
 
         if (result) {
           const cartonPicked = parseInt(result.CartonPicked || "0") + 1;
@@ -122,21 +106,20 @@ const PalletNew: React.FC<PalletNewProps> = (props) => {
               btnOkText: "",
             });
           } else {
-            props.updateQty(response_data).then((response) => {
+            dispatch(updateCartonQtyAction(response_data)).then((response) => {
               if (response) {
-                const resultIndex = props.barcodeScan.findIndex(
+                const resultIndex = barcodeScan.findIndex(
                   (item) => item.SKU === pasteValue
                 );
 
-                props.barcodeScan[resultIndex].CartonPicked = cartonPicked;
+                barcodeScan[resultIndex].CartonPicked = cartonPicked;
                 document.getElementById(pasteValue)!.innerText = `${cartonPicked}`;
               }
             });
           }
         }
       } else if (screen === 4) {
-        // Scan PO
-        props.getPoid(pasteValue).then((response) => {
+        dispatch(getPODescriptionAction(pasteValue)).then((response) => {
           if (response) {
             setPoid(pasteValue);
             setToggle(true);
@@ -152,8 +135,7 @@ const PalletNew: React.FC<PalletNewProps> = (props) => {
           }
         });
       } else if (screen === 5) {
-        // Handle PO barcode scan
-        const result = props.barcodeScanPo.find(
+        const result = barcodeScanPo?.find(
           (item) => item.SupplierSku === pasteValue
         );
 
@@ -166,13 +148,13 @@ const PalletNew: React.FC<PalletNewProps> = (props) => {
             supplierSku: pasteValue,
           };
 
-          props.receivePOAction(response_data).then((response) => {
+          dispatch(receivePOAction(response_data)).then((response) => {
             if (response) {
-              const resultIndex = props.barcodeScanPo.findIndex(
+              const resultIndex = barcodeScanPo.findIndex(
                 (item) => item.SupplierSku === pasteValue
               );
 
-              props.barcodeScanPo[resultIndex].QtyReceived = qtyReceived;
+              barcodeScanPo[resultIndex].QtyReceived = qtyReceived;
               document.getElementById(pasteValue)!.innerText = `${qtyReceived}`;
             }
           });
@@ -182,62 +164,56 @@ const PalletNew: React.FC<PalletNewProps> = (props) => {
   };
 
   const renderBarcodeItems = () => {
-    if (props.barcodeScan) {
-      return props.barcodeScan.map((value, index) => (
-        <Card key={index} variant="outlined" sx={{ mb: 2 }}>
-          <CardContent>
-            <Grid container spacing={2}>
-              <Grid item xs={4}>
-                <Typography variant="body1"><strong>{value.SKU}</strong></Typography>
-              </Grid>
-              <Grid item xs={4}>
-                <Typography variant="body1">{value.QtyProposed}</Typography>
-              </Grid>
-              <Grid item xs={4}>
-                <Typography variant="body1">
-                  <span id={value.SKU}>
-                    {value.CartonPicked != null ? value.CartonPicked : 0}
-                  </span>
-                  /{value.TotalCarton}
-                </Typography>
-              </Grid>
+    return barcodeScan?.map((value, index) => (
+      <Card key={index} variant="outlined" sx={{ mb: 2 }}>
+        <CardContent>
+          <Grid container spacing={2}>
+            <Grid item xs={4}>
+              <Typography variant="body1">
+                <strong>{value.SKU}</strong>
+              </Typography>
             </Grid>
-          </CardContent>
-        </Card>
-      ));
-    }
-
-    
-return null;
+            <Grid item xs={4}>
+              <Typography variant="body1">{value.QtyProposed}</Typography>
+            </Grid>
+            <Grid item xs={4}>
+              <Typography variant="body1">
+                <span id={value.SKU}>
+                  {value.CartonPicked != null ? value.CartonPicked : 0}
+                </span>
+                /{value.TotalCarton}
+              </Typography>
+            </Grid>
+          </Grid>
+        </CardContent>
+      </Card>
+    ));
   };
 
   const renderBarcodePoItems = () => {
-    if (props.barcodeScanPo) {
-      return props.barcodeScanPo.map((value, index) => (
-        <Card key={index} variant="outlined" sx={{ mb: 2 }}>
-          <CardContent>
-            <Grid container spacing={2}>
-              <Grid item xs={4}>
-                <Typography variant="body1"><strong>{value.SupplierSku}</strong></Typography>
-              </Grid>
-              <Grid item xs={4}>
-                <Typography variant="body1">{value.QtyOrdered}</Typography>
-              </Grid>
-              <Grid item xs={4}>
-                <Typography variant="body1">
-                  <span id={value.SupplierSku}>
-                    {value.QtyReceived != null ? value.QtyReceived : 0}
-                  </span>
-                </Typography>
-              </Grid>
+    return barcodeScanPo?.map((value, index) => (
+      <Card key={index} variant="outlined" sx={{ mb: 2 }}>
+        <CardContent>
+          <Grid container spacing={2}>
+            <Grid item xs={4}>
+              <Typography variant="body1">
+                <strong>{value.SupplierSku}</strong>
+              </Typography>
             </Grid>
-          </CardContent>
-        </Card>
-      ));
-    }
-
-    
-return null;
+            <Grid item xs={4}>
+              <Typography variant="body1">{value.QtyOrdered}</Typography>
+            </Grid>
+            <Grid item xs={4}>
+              <Typography variant="body1">
+                <span id={value.SupplierSku}>
+                  {value.QtyReceived != null ? value.QtyReceived : 0}
+                </span>
+              </Typography>
+            </Grid>
+          </Grid>
+        </CardContent>
+      </Card>
+    ));
   };
 
   const renderScreen = () => {
@@ -270,11 +246,7 @@ return null;
           <Card variant="outlined" sx={{ mt: 2 }}>
             <CardHeader
               title="ITO Items Receive List"
-              action={
-                <Button onClick={() => setScreen(3)}>
-                  Back
-                </Button>
-              }
+              action={<Button onClick={() => setScreen(3)}>Back</Button>}
             />
             <CardContent>{renderBarcodeItems()}</CardContent>
           </Card>
@@ -306,11 +278,7 @@ return null;
           <Card variant="outlined" sx={{ mt: 2 }}>
             <CardHeader
               title="PO Items Receive List"
-              action={
-                <Button onClick={() => setScreen(4)}>
-                  Back
-                </Button>
-              }
+              action={<Button onClick={() => setScreen(4)}>Back</Button>}
             />
             <CardContent>{renderBarcodePoItems()}</CardContent>
           </Card>
@@ -331,10 +299,10 @@ return null;
         btnCancelText={alertMessage.btnCancelText || "Ok"}
         cancelClick={() => setAlertMessage({ show: false, msg: "" })}
         btnOkText={alertMessage.btnOkText}
-        okClick={() => setAddshowModal(true)}
+        okClick={() => setToggle(true)}
       />
     </Box>
   );
 };
 
-export default connector(PalletNew);
+export default PalletNew;
