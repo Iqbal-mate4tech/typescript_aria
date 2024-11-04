@@ -1,5 +1,4 @@
 // src/containers/purchase-order/reducer.ts
-import type { POActionPayload } from './action';
 import { actionTypes } from './action';
 
 /** Initial state */
