@@ -1,5 +1,8 @@
+
 import { createBrowserHistory } from 'history';
 
-export const history = typeof window !== 'undefined' ? createBrowserHistory() : null;
+// Create a browser history object
+export const history = createBrowserHistory();
+
 
 

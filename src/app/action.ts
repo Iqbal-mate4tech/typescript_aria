@@ -1,4 +1,3 @@
-import type { AppThunk } from './store';
 import { showLoaderAction, stopLoaderAction } from './(dashboard)/user_master/action';
 import {
   addUpdateShipper,
@@ -10,36 +9,37 @@ import {
   addUpdateCategory,
   deleteCategory,
 } from './service';
+import { AppDispatch} from '../app/store';
 
-// Define interfaces for the request objects
-interface ShipperData {
-  shipper_id?: number;
-  shipper_name: string;
-}
+// // Define interfaces for the request objects
+// interface ShipperData {
+//   shipper_id?: number;
+//   shipper_name: string;
+// }
 
-interface PalletTypeData {
-  id?: number;
-  type: string;
-}
+// interface PalletTypeData {
+//   id?: number;
+//   type: string;
+// }
 
-interface UserData {
-  id?: number;
-  username: string;
-  password: string;
-  is_admin: number;
-  user_type: string;
-  store_access_id: string;
-}
+// interface UserData {
+//   id?: number;
+//   username: string;
+//   password: string;
+//   is_admin: number;
+//   user_type: string;
+//   store_access_id: string;
+// }
 
-interface CategoryData {
-  category_id?: number;
-  category_name: string;
-}
+// interface CategoryData {
+//   category_id?: number;
+//   category_name: string;
+// }
 
 // Define the actions using TypeScript types
 
-export const addUpdateShipperAction = (req: ShipperData): AppThunk<Promise<boolean>> => {
-  return async (dispatch) => {
+export const addUpdateShipperAction = (req: any)  => {
+  return async (dispatch:AppDispatch) => {
     dispatch(showLoaderAction('AddUpdateShipper'));
 
     try {
@@ -48,7 +48,6 @@ export const addUpdateShipperAction = (req: ShipperData): AppThunk<Promise<boole
       
 return true;
     } catch (error) {
-      console.error('Error in addUpdateShipperAction:', error);
       dispatch(stopLoaderAction('AddUpdateShipper'));
       
 return false;
@@ -56,8 +55,8 @@ return false;
   };
 };
 
-export const deleteShipperAction = (id: number): AppThunk<Promise<boolean>> => {
-  return async (dispatch) => {
+export const deleteShipperAction = (id: any) => {
+  return async (dispatch: AppDispatch) => {
     dispatch(showLoaderAction('DeleteShipper'));
 
     try {
@@ -74,8 +73,8 @@ return false;
   };
 };
 
-export const addUpdatePalletTypeAction = (req: PalletTypeData): AppThunk<Promise<boolean>> => {
-  return async (dispatch) => {
+export const addUpdatePalletTypeAction = (req: any) => {
+  return async (dispatch : AppDispatch) => {
     dispatch(showLoaderAction('addUpdatePalletType'));
 
     try {
@@ -84,7 +83,6 @@ export const addUpdatePalletTypeAction = (req: PalletTypeData): AppThunk<Promise
       
 return true;
     } catch (error) {
-      console.error('Error in addUpdatePalletTypeAction:', error);
       dispatch(stopLoaderAction('addUpdatePalletType'));
       
 return false;
@@ -92,8 +90,8 @@ return false;
   };
 };
 
-export const deletePalletTypeAction = (id: number): AppThunk<Promise<boolean>> => {
-  return async (dispatch) => {
+export const deletePalletTypeAction = (id: any) => {
+  return async (dispatch : AppDispatch) => {
     dispatch(showLoaderAction('deletePalletType'));
 
     try {
@@ -110,8 +108,8 @@ return false;
   };
 };
 
-export const addUpdateUserAction = (req: UserData): AppThunk<Promise<boolean>> => {
-  return async (dispatch) => {
+export const addUpdateUserAction = (req: any) => {
+  return async (dispatch : AppDispatch) => {
     dispatch(showLoaderAction('addUpdateUsers'));
 
     try {
@@ -120,7 +118,6 @@ export const addUpdateUserAction = (req: UserData): AppThunk<Promise<boolean>> =
       
 return true;
     } catch (error) {
-      console.error('Error in addUpdateUserAction:', error);
       dispatch(stopLoaderAction('addUpdateUsers'));
       
 return false;
@@ -128,8 +125,8 @@ return false;
   };
 };
 
-export const deleteUserAction = (id: number): AppThunk<Promise<boolean>> => {
-  return async (dispatch) => {
+export const deleteUserAction = (id: any) => {
+  return async (dispatch: AppDispatch) => {
     dispatch(showLoaderAction('deleteUser'));
 
     try {
@@ -138,7 +135,6 @@ export const deleteUserAction = (id: number): AppThunk<Promise<boolean>> => {
       
 return true;
     } catch (error) {
-      console.error('Error in deleteUserAction:', error);
       dispatch(stopLoaderAction('deleteUser'));
       
 return false;
@@ -146,8 +142,8 @@ return false;
   };
 };
 
-export const addUpdateCategoryAction = (req: CategoryData): AppThunk<Promise<boolean>> => {
-  return async (dispatch) => {
+export const addUpdateCategoryAction = (req: any) => {
+  return async (dispatch: AppDispatch) => {
     dispatch(showLoaderAction('addUpdateCategory'));
 
     try {
@@ -156,7 +152,6 @@ export const addUpdateCategoryAction = (req: CategoryData): AppThunk<Promise<boo
       
 return true;
     } catch (error) {
-      console.error('Error in addUpdateCategoryAction:', error);
       dispatch(stopLoaderAction('addUpdateCategory'));
       
 return false;
@@ -164,8 +159,8 @@ return false;
   };
 };
 
-export const deleteCategoryAction = (id: number): AppThunk<Promise<boolean>> => {
-  return async (dispatch) => {
+export const deleteCategoryAction = (id: any) => {
+  return async (dispatch: AppDispatch) => {
     dispatch(showLoaderAction('deleteCategory'));
 
     try {
@@ -174,7 +169,6 @@ export const deleteCategoryAction = (id: number): AppThunk<Promise<boolean>> => 
       
 return true;
     } catch (error) {
-      console.error('Error in deleteCategoryAction:', error);
       dispatch(stopLoaderAction('deleteCategory'));
       
 return false;

@@ -28,7 +28,7 @@
     "@mui/material-nextjs": "5.15.11",
     "@mui/system": "^5.16.7",
     "@mui/x-date-pickers": "^7.12.1",
-    "@reduxjs/toolkit": "^2.2.7",
+    "@reduxjs/toolkit": "^2.2.8",
     "aws-sdk": "^2.1672.0",
     "ckeditor5": "^42.0.1",
     "classnames": "2.5.1",

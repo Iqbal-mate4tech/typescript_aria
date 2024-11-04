@@ -1,182 +1,185 @@
+// src/shared/base-api.ts
+
 import fetch from 'isomorphic-fetch';
 
 import { apiUrl } from '../constants';
 
-// Define types for the default options
-interface RequestOptions extends RequestInit {
-  headers: Record<string, string>;
-  body?: string | null;
-  method?: string;
-}
+// Define a type for request options
+// interface RequestOptions extends RequestInit {
+//   body?: string;
+//   headers?: Record<string, string>;
+// }
 
-// Immutable default options
-const defaultOptions: RequestOptions = {
-  method: 'post',
+// Default options for making API requests
+const defaultOptions: any = {
+  method: 'POST',
   headers: {
     'Content-Type': 'application/json',
-    'ngrok-skip-browser-warning': 'true', // Can be removed if not needed
-    'Access-Control-Allow-Credentials':'true',
+    'ngrok-skip-browser-warning': 'true', // Note: Remove this line if not needed
   },
-  credentials: 'include', // Ensures cookies and other credentials are included
+  credentials: 'include',
 };
 
-// Function to make a request to the API
-export async function makeRequest<T = any>(uri: string, options: Partial<RequestOptions> = {}): Promise<T> {
-  try {
-    // Ensure headers are always initialized
-    const requestOptions: RequestOptions = {
-      ...defaultOptions,
-      ...options,
-      headers: {
-        ...defaultOptions.headers,
-        ...(options.headers || {}), // Ensure headers are never undefined
-      },
-    };
-
-    if (uri !== apiUrl.userLogin) {
-      requestOptions.headers['x-tokens'] = localStorage.getItem('token') || '';
-    }
-
-    const response = await fetch(`${apiUrl.baseApiUrl}${uri}`, requestOptions);
-
-    console.log(response);
-
-    if (response.status >= 400) {
-      if (response.status === 401) {
+// Helper function to handle responses
+const handleResponse = async (response: Response) => {
+  if (response.status >= 400) {
+    if (response.status === 401) {
+      // Handle unauthorized response
+      if (typeof window !== 'undefined') {
         const userId = localStorage.getItem('user');
         const userName = localStorage.getItem('userName');
 
         localStorage.clear();
         localStorage.setItem('user', userId || '');
         localStorage.setItem('userName', userName || '');
-        window.location.href = '/';
+        window.location.href = '/'; // Redirect to login or home page
       }
+      
+return;
+    }
+    
 
-      const errorText = await response.text();
+    throw new Error(`HTTP Error: ${response.status}`);
+  }
 
-      throw new Error(`API Error: ${response.statusText} - ${errorText}`);
+  
+return response.json();
+};
+
+// Function to make a request to the API
+export async function makeRequest(uri: string, options: any = defaultOptions): Promise<any> {
+  if (uri !== apiUrl.userLogin) {
+    if (typeof window !== 'undefined') {
+      options.headers = {
+        ...options.headers,
+        'x-tokens': localStorage.getItem('token') || '',
+      };
     }
 
-    return response.json();
-  } catch (error) {
-    console.error('API Request Error:', error);
-    throw error;
+;
   }
+
+  const requestUri = `${apiUrl.baseApiUrl}${uri}`;
+  const response = await fetch(requestUri, { ...options });
+
+  
+return handleResponse(response);
 }
 
-// Function to make a GET request to the Odoo API
-export async function makeOdooRequest<T = any>(uri: string, method: string = 'GET', options: Partial<RequestOptions> = {}): Promise<T> {
-  try {
-    const requestOptions: RequestOptions = {
-      ...defaultOptions,
-      ...options,
-      method,
-      headers: {
-        ...defaultOptions.headers,
-        ...(options.headers || {}), // Ensure headers are never undefined
-      },
-      redirect: 'follow',
-    };
+// Function to make an Odoo-specific request
+export async function makeOdooRequest(
+  uri: string,
+  options: any = defaultOptions,
+  method: string = 'GET'
+): Promise<any> {
+  const requestOptions: any = {
+    ...options,
+    method,
+  };
 
-    const response = await fetch(`${apiUrl.baseOdooApiUrl}${uri}`, requestOptions);
+  const requestUri = `${apiUrl.baseOdooApiUrl}${uri}`;
+  const response = await fetch(requestUri, requestOptions);
 
-    if (!response.ok) {
-      const errorText = await response.text();
-
-      throw new Error(`Odoo API Error: ${response.statusText} - ${errorText}`);
-    }
-
-    
-return response.json();
-  } catch (error) {
-    console.error('Odoo API Request Error:', error);
-    throw error;
-  }
+  
+return handleResponse(response);
 }
 
 // Function to make a POST request to the Odoo API
-export async function makeOdooPostRequest<T = any>(uri: string, data: any): Promise<T> {
-  try {
-    const requestOptions: RequestOptions = {
-      method: 'POST',
-      body: JSON.stringify(data),
-      redirect: 'follow',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
-
-    const response = await fetch(`${apiUrl.baseOdooApiUrl}${uri}`, requestOptions);
-
-    if (!response.ok) {
-      const errorText = await response.text();
-
-      throw new Error(`Odoo POST API Error: ${response.statusText} - ${errorText}`);
-    }
-
-    
-return response.json();
-  } catch (error) {
-    console.error('Odoo POST Request Error:', error);
-    throw error;
-  }
-}
-
-// Function to make a GET request
-export function doGetRequest<T = any>(uri: string, options: Partial<RequestOptions> = {}): Promise<T> {
-  return makeRequest(uri, { ...options, method: 'GET', body: null });
-}
-
-// Function to make a POST request
-export function doPostRequest<T = any>(uri: string, data: any, options: Partial<RequestOptions> = {}): Promise<T> {
-  const postOptions: RequestOptions = {
-    ...options,
+export async function makeOdooPostRequest(uri: string, data: any): Promise<any> {
+  const requestOptions: any = {
     method: 'POST',
+    body: JSON.stringify(data),
     headers: {
-      ...(options.headers || {}), // Ensure headers are never undefined
+      'Content-Type': 'application/json',
     },
   };
 
+  const requestUri = `${apiUrl.baseOdooApiUrl}${uri}`;
+  const response = await fetch(requestUri, requestOptions);
+
+  
+return handleResponse(response);
+}
+
+
+
+
+
+
+
+
+
+// Function to make an Odoo-specific GET request
+export async function doOdooGetRequest(uri: string, options: any = defaultOptions): Promise<any> {
+  options.method = 'GET';
+  delete options.body;
+  
+return makeOdooRequest(uri, options);
+}
+
+
+
+
+
+// Function to make a GET request to the API
+export async function doGetRequest(uri: string, options: any = defaultOptions): Promise<any> {
+  options.method = 'GET';
+  delete options.body;
+  
+return makeRequest(uri, options);
+}
+
+
+
+
+
+// Function to make an Odoo-specific POST request
+export async function doOdooPostRequest(uri: string, data: any, options: any = defaultOptions): Promise<any> {
+  options.method = 'POST';
+  options.body = JSON.stringify(data);
+  
+return makeOdooPostRequest(uri, data);
+}
+
+
+
+// Function to make a POST request to the API
+export async function doPostRequest(uri: string, data: any, options: any = defaultOptions): Promise<any> {
+  options.method = 'POST';
+
   if (uri === apiUrl.userLogin) {
-    postOptions.headers['Authorization'] = 'Basic ' + btoa(`${data.userId}:${data.userPwd}`);
-    postOptions.body = null;
+    options.headers = {
+      ...options.headers,
+      Authorization: 'Basic ' + btoa(`${data.userId}:${data.userPwd}`),
+    };
+    options.body = '';
   } else {
-    postOptions.body = JSON.stringify(data);
+    options.body = JSON.stringify(data);
   }
 
-  return makeRequest(uri, postOptions);
+  
+return makeRequest(uri, options);
 }
 
-// Function to make a DELETE request
-export function doDeleteRequest<T = any>(uri: string, data: any, options: Partial<RequestOptions> = {}): Promise<T> {
-  return makeRequest(uri, {
-    ...options,
-    method: 'DELETE',
-    body: JSON.stringify(data),
-    headers: {
-      ...(options.headers || {}), // Ensure headers are never undefined
-    },
-  });
+
+
+
+
+
+// Function to make a DELETE request to the API
+export async function doDeleteRequest(uri: string, data: any, options: any = defaultOptions): Promise<any> {
+  options.method = 'DELETE';
+  options.body = JSON.stringify(data);
+  
+return makeRequest(uri, options);
 }
 
-// Function to make a PUT request
-export function doPutRequest<T = any>(uri: string, data: any, options: Partial<RequestOptions> = {}): Promise<T> {
-  return makeRequest(uri, {
-    ...options,
-    method: 'PUT',
-    body: JSON.stringify(data),
-    headers: {
-      ...(options.headers || {}), // Ensure headers are never undefined
-    },
-  });
-}
 
-// Function to make a GET request to the Odoo API
-export function doOdooGetRequest<T = any>(uri: string, options: Partial<RequestOptions> = {}): Promise<T> {
-  return makeOdooRequest(uri, 'GET', { ...options, body: null });
-}
 
-// Function to make a POST request to the Odoo API
-export function doOdooPostRequest<T = any>(uri: string, data: any, options: Partial<RequestOptions> = {}): Promise<T> {
-  return makeOdooPostRequest(uri, data);
+// Function to make a PUT request to the API
+export async function doPutRequest(uri: string, data: any, options: any = defaultOptions): Promise<any> {
+  options.method = 'PUT';
+  options.body = JSON.stringify(data);
+  
+return makeRequest(uri, options);
 }

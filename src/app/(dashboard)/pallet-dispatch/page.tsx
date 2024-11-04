@@ -7,15 +7,16 @@ import { useRouter } from 'next/navigation';
 import {
   Card, CardContent, Button, TextField, Typography, Checkbox, Grid, TextareaAutosize, CircularProgress, Box
 } from '@mui/material';
-import {  useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import {
-  palletsAction, palletItemsAction, unmountPalletsAction, clearPalletsAction, clearFormData, updatePalletFormData
+  palletsAction, palletItemsAction, unmountPalletsAction,
+  clearPalletsAction, clearFormData, updatePalletFormData, savePalletAction
 } from '../pallet/action';
 import {
   palletBookingMasterDataAction, updatePalletShippingStatusAction, palletByStatusAction
 } from '../pallet-booking/action';
-import { type RootState,  useAppDispatch } from '../../store';
+import { type RootState, useAppDispatch } from '../../store';
 import AppHeader from '@components/app-header';
 import { AppAlert } from '@components/app-alert';
 import SingleSelect from '@components/single-select';
@@ -28,31 +29,41 @@ const PalletDispatch: React.FC = () => {
   const dispatch = useAppDispatch();
   const isAuthenticated = useAuth();
 
-  const [detailsToShowIndex, setDetailsToShowIndex] = useState<number | undefined>(undefined);
-  const [itemDetailsToShowIndex, setItemDetailsToShowIndex] = useState<number | undefined>(undefined);
-  const [pageNo, setPageNo] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const [showAlert, setShowAlert] = useState(false);
-  const [alertMessage, setAlertMessage] = useState('');
+
+  const [detailsToShowIndex, setDetailsToShowIndex] = useState<any>(undefined);
+  const [itemDetailsToShowIndex, setItemDetailsToShowIndex] = useState<any>(undefined);
+  const [pageNo, setPageNo] = useState<any>(1);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [showAlert, setShowAlert] = useState<boolean>(false);
+  const [alertMessage, setAlertMessage] = useState<string>('');
+  const [userName, setUserName] = useState<any>(null);
 
   const {
     palletShipper,
     palletStore,
     pallets,
     palletItems,
-    formData,
-    userName
+    formData
   } = useSelector((state: RootState) => ({
     palletShipper: state.pallet.palletShipper,
     palletStore: state.pallet.palletStore,
     pallets: state.pallet.pallets,
     palletItems: state.pallet.palletItems,
-    formData: state.pallet.formData,
-    userName: localStorage.getItem('userName') || ''
+    formData: state.pallet.formData
   }));
 
   useEffect(() => {
-    if (!isAuthenticated) return;
+    // Check if running on the client to access `localStorage`
+    if (typeof window !== 'undefined') {
+      const storedUserName = localStorage.getItem('userName') || '';
+
+      setUserName(storedUserName);
+    }
+  }, []);
+
+
+  useEffect(() => {
+    // if (!isAuthenticated) return;
 
     dispatch(palletBookingMasterDataAction());
     dispatch(clearFormData({ palletIds: [] }));
@@ -62,7 +73,7 @@ const PalletDispatch: React.FC = () => {
       dispatch(unmountPalletsAction());
       dispatch(clearFormData({ palletIds: [] }));
     };
-  }, [isAuthenticated]);
+  }, []);
 
   const getPallets = (e?: any) => {
     setLoading(true);
@@ -75,16 +86,16 @@ const PalletDispatch: React.FC = () => {
 
   const getPalletData = (page = 1, event?: any) => {
     const request: any = {
-      page,
+      page: page,
       status: 'Booked'
     };
 
-    if (formData?.searchStore) {
+    if (formData && formData.searchStore) {
       request.store_id = formData.searchStore;
     }
 
     dispatch(palletByStatusAction(request)).then(() => {
-      event?.target.complete();
+      event && event.target.complete();
       setLoading(false);
     });
 
@@ -117,7 +128,7 @@ const PalletDispatch: React.FC = () => {
     }));
   };
 
-  const onRowClick = (index: number, id: number) => {
+  const onRowClick = (index: number, id: any) => {
     if (index === detailsToShowIndex) {
       setDetailsToShowIndex(undefined);
     } else {
@@ -134,11 +145,11 @@ const PalletDispatch: React.FC = () => {
   };
 
   const onDispatchClick = () => {
-    if (!formData?.conNumber || !formData?.shipper || !formData?.palletIds || formData.palletIds.length <= 0) {
+    if (!formData || !formData.conNumber || !formData.shipper || !formData.palletIds || formData.palletIds.length <= 0) {
       setAlertMessage('Please enter con. number, select shipper and pallet to dispatch');
       setShowAlert(true);
-      
-return;
+
+      return;
     }
 
     const request: any = {
@@ -149,9 +160,24 @@ return;
       user: userName,
     };
 
-    dispatch(updatePalletShippingStatusAction(request)).then((response: boolean) => {
+    dispatch(updatePalletShippingStatusAction(request)).then((response: any) => {
       setAlertMessage(response ? 'Dispatched successfully!!!' : 'Dispatching failed!!!');
       setShowAlert(true);
+
+      const palletData = {
+        id: request.id,
+        con_number: request.con_number,     // Shipper's name
+        status: request.status,
+        last_status_changed_by: request.user
+      };
+
+      dispatch(savePalletAction(palletData))
+        .then(() => {
+          console.log('Pallet data sent to Odoo successfully');
+        })
+        .catch((error) => {
+          console.error('Error sending pallet data to Odoo:', error);
+        });
 
       if (response) {
         setItemDetailsToShowIndex(undefined);
@@ -165,7 +191,7 @@ return;
   };
 
   const onPalletChecked = (pallet: any, checked: boolean) => {
-    if (formData?.palletIds) {
+    if (formData && formData.palletIds) {
       let _palletIds = [...formData.palletIds];
       let total = 0;
       const typeToUpdate: any = {};
@@ -219,24 +245,28 @@ return;
             ? formData.weight + parseInt(pallet.weight)
             : parseInt(pallet.weight)
           : formData.weight
-          ? formData.weight - parseInt(pallet.weight)
-          : 0;
+            ? formData.weight - parseInt(pallet.weight)
+            : 0;
       }
 
       dispatch(updatePalletFormData(typeToUpdate));
     }
   };
 
+  if (!isAuthenticated) {
+    return null; // Avoid rendering if not authenticated
+  }
+
   const palletItemsData = () => {
     return palletItems && palletItems.length > 0 ? (
       palletItems.map((value: any, index: number) => (
         <Card key={index} onClick={(e) => { e.stopPropagation(); onItemRowClick(index); }} className="cursor-pointer mb-2">
           <CardContent>
-            <Grid container spacing={2} alignItems="center">
-              <Grid item xs={6}>
+            <Grid container spacing={2}>
+              <Grid item md={6} xs={8}>
                 <Typography variant="subtitle2" className="font-bold text-gray-700">{value.barcode}</Typography>
               </Grid>
-              <Grid item xs={6}>
+              <Grid item md={6} xs={4}>
                 <Typography variant="subtitle2" className="text-gray-700">Qty: <strong>{value.quantity}</strong></Typography>
               </Grid>
               {index === itemDetailsToShowIndex && (
@@ -263,10 +293,16 @@ return;
         <Card key={index} onClick={() => onRowClick(index, value.id)} className="cursor-pointer mb-4">
           <CardContent>
             <Grid container spacing={2} alignItems="center">
-              <Grid item xs={2}>
+              <Grid item md={2} xs={4}>
                 <Typography variant="h6" className="font-bold text-gray-800">{value.id}</Typography>
               </Grid>
-              <Grid item xs={2}>
+
+              <Grid item md={8} xs={6}>
+                <Typography variant="body2" className="text-gray-700">{value.store_name}</Typography>
+                <Typography variant="body2" className="text-gray-700">{value.status}</Typography>
+                <Typography variant="body2" className="text-gray-700">{value.freight_company}</Typography>
+              </Grid>
+              <Grid item md={2} xs={2}>
                 <Checkbox
                   checked={formData.palletIds.includes(value.id)}
                   onClick={(e) => e.stopPropagation()}
@@ -276,13 +312,8 @@ return;
                   }}
                 />
               </Grid>
-              <Grid item xs={8}>
-                <Typography variant="body2" className="text-gray-700">{value.store_name}</Typography>
-                <Typography variant="body2" className="text-gray-700">{value.status}</Typography>
-                <Typography variant="body2" className="text-gray-700">{value.freight_company}</Typography>
-              </Grid>
               {index === detailsToShowIndex && (
-                <Grid item xs={12}>
+                <Grid item md={12}>
                   <Typography variant="body2" className="text-gray-700">Category: <strong>{value.category}</strong></Typography>
                   <Typography variant="body2" className="text-gray-700">Pallet Type: <strong>{value.pallet_type}</strong></Typography>
                   <Typography variant="body2" className="text-gray-700">Weight: <strong>{value.weight}</strong></Typography>
@@ -301,9 +332,7 @@ return;
     );
   };
 
-  if (!isAuthenticated) {
-    return null; // Avoid rendering if not authenticated
-  }
+
 
   return (
     <div className="p-8">
@@ -311,9 +340,9 @@ return;
       <div className="mb-8">
         <Card className="mb-8 bg-white shadow-lg">
           <CardContent>
-            <Grid container spacing={4} alignItems="center">
-              <Grid item xs={4}>
-                <Typography variant="body2" className="font-bold text-gray-800">Store</Typography>
+            <Grid container spacing={2}>
+              <Grid item md={6} xs={12}>
+                {/* <Typography variant="body2" className="font-bold text-gray-800">Store</Typography> */}
                 <SingleSelect
                   name="searchStore"
                   options={palletStore}
@@ -323,19 +352,21 @@ return;
                   value={formData.searchStore || ''}
                 />
               </Grid>
-              <Grid item xs={2}>
-                <Button variant="contained" className="w-full" onClick={onSearchClick}>Search</Button>
+              <Grid item md={3} xs={6}>
+                <Button variant="contained" className="w-full" size="large" style={{ padding: '15px 0' }} fullWidth
+                  onClick={onSearchClick}>Search</Button>
               </Grid>
-              <Grid item xs={2}>
-                <Button variant="outlined" className="w-full" onClick={onClearClick}>Clear</Button>
+              <Grid item md={3} xs={6}>
+                <Button variant="contained" className="w-full" size="large" style={{ padding: '15px 0' }} fullWidth
+                  onClick={onClearClick}>Clear</Button>
               </Grid>
             </Grid>
           </CardContent>
         </Card>
         <Card className="mb-8 bg-white shadow-lg">
           <CardContent>
-            <Grid container spacing={4} alignItems="center">
-              <Grid item xs={3}>
+            <Grid container spacing={2}>
+              <Grid item md={2} xs={6}>
                 <Typography variant="body2" className="font-bold text-gray-800">Shippers</Typography>
                 <SingleSelect
                   name="shipper"
@@ -344,46 +375,51 @@ return;
                   optionName="shipper_name"
                   onChange={onFieldChange}
                   value={formData.shipper || ''}
-                />
-              </Grid>
-              <Grid item xs={3}>
-                <Typography variant="body2" className="font-bold text-gray-800">Con. Number</Typography>
-                <TextField
-                  name="conNumber"
-                  value={formData.conNumber}
-                  onChange={(e) => onFieldChange('conNumber', e.target.value)}
                   fullWidth
                 />
               </Grid>
-              <Grid item xs={2}>
+              <Grid item md={2} xs={6}>
+                <Typography variant="body2" className="font-bold text-gray-800">Con. Number</Typography>
+                <TextField
+                  name="conNumber"
+                  value={formData.conNumber || ''}
+                  onChange={(e) => onFieldChange(e.target.name, e.target.value)}
+                  fullWidth
+                />
+              </Grid>
+              <Grid item md={2} xs={6}>
                 <Typography variant="body2" className="font-bold text-gray-800">Total Weight</Typography>
                 <TextField variant="outlined" disabled value={formData.weight} fullWidth />
               </Grid>
-              <Grid item xs={2}>
+              <Grid item md={2} xs={6}>
                 <Typography variant="body2" className="font-bold text-gray-800">Chep</Typography>
                 <TextField variant="outlined" disabled value={formData.chep} fullWidth />
               </Grid>
-              <Grid item xs={2}>
+              <Grid item md={2} xs={6}>
                 <Typography variant="body2" className="font-bold text-gray-800">Loscam</Typography>
                 <TextField variant="outlined" disabled value={formData.loscam} fullWidth />
               </Grid>
-              <Grid item xs={2}>
+              <Grid item md={2} xs={6}>
                 <Typography variant="body2" className="font-bold text-gray-800">Plain</Typography>
                 <TextField variant="outlined" disabled value={formData.plain} fullWidth />
               </Grid>
-              <Grid item xs={2}>
+              <Grid item md={2} xs={6}>
                 <Typography variant="body2" className="font-bold text-gray-800">Total</Typography>
                 <TextField variant="outlined" disabled value={formData.total} fullWidth />
               </Grid>
-              <Grid item xs={6}>
+              <Grid item md={4} xs={6}>
                 <Typography variant="body2" className="font-bold text-gray-800">Selected Pallets</Typography>
                 <TextareaAutosize minRows={3} disabled value={formData.palletIds && formData.palletIds.join(', ')} className="w-full p-2 border border-gray-300 rounded" />
               </Grid>
-              <Grid item xs={2}>
-                <Button variant="contained" color="primary" fullWidth onClick={onDispatchClick}>Dispatch</Button>
+            </Grid>
+            <Grid container spacing={2} style={{ justifyContent: 'flex-end' }}>
+              <Grid item md={3} xs={6}>
+                <Button variant="contained" color="primary" size="large" style={{ padding: '15px 0' }} fullWidth
+                  onClick={onDispatchClick}>Dispatch</Button>
               </Grid>
-              <Grid item xs={2}>
-                <Button variant="outlined" color="secondary" fullWidth onClick={() => router.push(webUrl.pallet)}>Back</Button>
+              <Grid item md={3} xs={6}>
+                <Button variant="contained" color="primary" size="large" style={{ padding: '15px 0' }} fullWidth
+                  onClick={() => router.push(webUrl.pallet)}>Back</Button>
               </Grid>
             </Grid>
           </CardContent>

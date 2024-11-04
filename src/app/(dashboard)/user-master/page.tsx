@@ -3,14 +3,14 @@ import React, { useState, useEffect } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import { Card, CardContent, Grid, IconButton, Typography, Tooltip, Box,Container,Snackbar,Alert} from '@mui/material';
+import { Card, CardContent, Grid, IconButton, Typography, Tooltip, Box, Container, Snackbar, Alert } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import AppHeader from '@components/app-header';
 import UserMasterModal from '@components/user-modal';
-import {AppAlert} from '@components/app-alert';
-import type { RootState } from '../../store';
+import { AppAlert } from '@components/app-alert';
+import { useAppDispatch, type RootState } from '../../store';
 
 import { usersAction, userTypeAction } from '../user_master/action'; // Adjust paths as necessary
 import { deleteUserAction, addUpdateUserAction } from '../../action'; // Adjust paths as necessary
@@ -22,11 +22,13 @@ import useAuth from '@components/withAuth';
 const UserMaster: React.FC = () => {
   const isAuthenticated = useAuth();
   const router = useRouter();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
+
+
   const users = useSelector((state: RootState) => state.user.users);
   const types = useSelector((state: RootState) => state.user.userTypes);
 
-  const [id, setId] = useState<number | undefined>(undefined);
+  const [id, setId] = useState<any>(undefined);
   const [name, setName] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [type, setType] = useState<string>('');
@@ -42,11 +44,12 @@ const UserMaster: React.FC = () => {
   const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
 
   useEffect(() => {
-    if (isAuthenticated) {
-      dispatch(usersAction());
-      dispatch(userTypeAction());
-    }
-  }, [isAuthenticated, dispatch]);
+    // if (isAuthenticated) {
+    dispatch(usersAction());
+    dispatch(userTypeAction());
+
+    // }
+  }, []);
 
   const onAddClick = () => setShowModal(true);
 
@@ -74,9 +77,9 @@ const UserMaster: React.FC = () => {
   };
 
   const onDoneClick = async () => {
-    const request = {
+    const request: any = {
       username: name,
-      password,
+      password: password,
       is_admin: admin ? 1 : 0,
       user_type: type,
       store_access_id: store,
@@ -90,6 +93,7 @@ const UserMaster: React.FC = () => {
 
     if (response) {
       closeModal();
+      resetModal();
       dispatch(usersAction());
       showFlashMessage('Record saved successfully!', 'success');
     } else {
@@ -103,6 +107,8 @@ const UserMaster: React.FC = () => {
 
     if (response) {
       setShowConfirm(false);
+      closeModal();
+      resetModal();
       dispatch(usersAction());
       showFlashMessage('Record deleted successfully!', 'success');
     } else {
@@ -116,6 +122,9 @@ const UserMaster: React.FC = () => {
     setFlashSeverity(severity);
     setOpenSnackbar(true);
   };
+
+
+  if (!isAuthenticated) return null; // Prevent rendering if not authenticated
 
   const renderCards = () => {
     return users && Array.isArray(users) ? (
@@ -142,7 +151,8 @@ const UserMaster: React.FC = () => {
                 <Tooltip title="Edit">
                   <IconButton
                     color="primary"
-                    onClick={() => {
+                    onClick={(e: any) => {
+                      e.stopPropagation();
                       setShowModal(true);
                       setModal(value);
                     }}
@@ -153,7 +163,8 @@ const UserMaster: React.FC = () => {
                 <Tooltip title="Delete">
                   <IconButton
                     color="error"
-                    onClick={() => {
+                    onClick={(e: any) => {
+                      e.stopPropagation();
                       setShowConfirm(true);
                       setAlertMessage('Are you sure you want to delete?');
                       setId(value.id);
@@ -174,7 +185,7 @@ const UserMaster: React.FC = () => {
     );
   };
 
-  if (!isAuthenticated) return null; // Prevent rendering if not authenticated
+
 
   return (
     <Container>
@@ -211,7 +222,7 @@ const UserMaster: React.FC = () => {
         btnCancelText="Cancel"
         btnOkText="Yes"
         okClick={onDeleteClick}
-        cancelClick={() => setShowConfirm(false)}
+        cancelClick={() => { setShowConfirm(false); setId(0); }}
       />
       <AppAlert
         showAlert={showAlert}
@@ -226,7 +237,7 @@ const UserMaster: React.FC = () => {
         open={openSnackbar}
         autoHideDuration={3000}
         onClose={() => setOpenSnackbar(false)}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
         <Alert severity={flashSeverity} onClose={() => setOpenSnackbar(false)}>
           {flashMessage}

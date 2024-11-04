@@ -4,7 +4,7 @@ import { stringformat } from '../shared/common';
 
 // Define TypeScript types for the data being sent to the APIs
 interface ShipperData {
-  shipper_id?: number;
+  shipper_id?: number | string;
   shipper_name: string;
 }
 
@@ -32,7 +32,7 @@ export function addUpdateShipper(data: ShipperData) {
   return doPostRequest(apiUrl.addUpdateShipper, data);
 }
 
-export function deleteShipper(id: number) {
+export function deleteShipper(id: any) {
   return doGetRequest(stringformat(apiUrl.deleteShipper, [id]));
 }
 
@@ -41,7 +41,7 @@ export function addUpdatePalletType(data: PalletTypeData) {
   return doPostRequest(apiUrl.addUpdatePalletType, data);
 }
 
-export function deletePalletType(id: number) {
+export function deletePalletType(id: any) {
   return doGetRequest(stringformat(apiUrl.deletePalletType, [id]));
 }
 
@@ -50,7 +50,7 @@ export function addUpdateUsers(data: UserData) {
   return doPostRequest(apiUrl.addUpdateUsers, data);
 }
 
-export function deleteUser(id: number) {
+export function deleteUser(id: any) {
   return doGetRequest(stringformat(apiUrl.deleteUser, [id]));
 }
 
@@ -59,6 +59,6 @@ export function addUpdateCategory(data: CategoryData) {
   return doPostRequest(apiUrl.addUpdateCategory, data);
 }
 
-export function deleteCategory(id: number) {
+export function deleteCategory(id: any) {
   return doGetRequest(stringformat(apiUrl.deleteCategory, [id]));
 }

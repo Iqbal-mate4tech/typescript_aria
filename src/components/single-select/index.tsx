@@ -4,6 +4,7 @@ import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 
 interface SingleSelectProps {
   disabled?: boolean;
+  fullWidth?: any;
   name: string;
   value: string | number;
   options: Array<{ [key: string]: string | number }>;

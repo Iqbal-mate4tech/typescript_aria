@@ -8,10 +8,14 @@ import { Card, CardHeader, Typography, Container } from '@mui/material';
 
 import { RootState } from '../../store'; // Adjust the path as necessary
 import AppHeader from '../../../components/app-header';
+import useAuth from '@/components/withAuth';
 
 const Distribution: React.FC = () => {
     const router = useRouter();
     const dispatch = useDispatch();
+    const isAuthenticated = useAuth();
+
+    if (!isAuthenticated) return null;
 
     return (
         <Container>

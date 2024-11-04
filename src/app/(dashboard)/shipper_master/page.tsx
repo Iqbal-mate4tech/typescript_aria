@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 
 import { Card, CardContent, Grid, IconButton, Typography, Box, Container, Tooltip, Snackbar, Alert } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
-import {  useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 import AppHeader from "@components/app-header";
 import { useAppDispatch, type RootState } from "../../store"; // Adjust the import to match your store's file structure
@@ -20,9 +20,11 @@ const ShipperMaster: React.FC = () => {
   const isAuthenticated = useAuth();
   const router = useRouter();
   const dispatch = useAppDispatch();
+
+
   const shipper = useSelector((state: RootState) => state.pallet.palletShipper);
 
-  const [id, setId] = useState<number | undefined>(undefined);
+  const [id, setId] = useState<any>(undefined);
   const [name, setName] = useState<string>("");
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showAlert, setShowAlert] = useState<boolean>(false);
@@ -34,10 +36,11 @@ const ShipperMaster: React.FC = () => {
   const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
 
   useEffect(() => {
-    if (isAuthenticated) {
-      dispatch(palletShipperAction());
-    }
-  }, [isAuthenticated, dispatch]);
+    // if (isAuthenticated) {
+    dispatch(palletShipperAction());
+
+    // }
+  }, []);
 
   const onAddClick = () => {
     setShowModal(true);
@@ -50,7 +53,7 @@ const ShipperMaster: React.FC = () => {
   };
 
   const onDoneClick = async () => {
-    const request = { shipper_name: name };
+    const request: any = { shipper_name: name };
 
     if (id) request.shipper_id = id;
 
@@ -58,6 +61,8 @@ const ShipperMaster: React.FC = () => {
 
     if (response) {
       closeModal();
+      setId(undefined);
+      setName('');
       dispatch(palletShipperAction());
       showFlashMessage("Record saved successfully!", "success");
     } else {
@@ -71,6 +76,8 @@ const ShipperMaster: React.FC = () => {
 
     if (response) {
       setShowConfirm(false);
+      setId(undefined);
+      setName('');
       dispatch(palletShipperAction());
       showFlashMessage("Record deleted successfully!", "success");
     } else {
@@ -84,6 +91,8 @@ const ShipperMaster: React.FC = () => {
     setFlashSeverity(severity);
     setOpenSnackbar(true);
   };
+
+  if (!isAuthenticated) return null; // Prevent rendering if not authenticated
 
   const renderCards = () => {
     return shipper && Array.isArray(shipper) ? (
@@ -103,7 +112,8 @@ const ShipperMaster: React.FC = () => {
                 <Tooltip title="Edit">
                   <IconButton
                     color="primary"
-                    onClick={() => {
+                    onClick={(e: any) => {
+                      e.stopPropagation();
                       setShowModal(true);
                       setId(value.shipper_id);
                       setName(value.shipper_name);
@@ -115,7 +125,8 @@ const ShipperMaster: React.FC = () => {
                 <Tooltip title="Delete">
                   <IconButton
                     color="error"
-                    onClick={() => {
+                    onClick={(e: any) => {
+                      e.stopPropagation();
                       setShowConfirm(true);
                       setAlertMessage("Are you sure to delete?");
                       setId(value.shipper_id);
@@ -136,7 +147,7 @@ const ShipperMaster: React.FC = () => {
     );
   };
 
-  if (!isAuthenticated) return null; // Prevent rendering if not authenticated
+
 
   return (
     <Container>

@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import {  useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import {
   Button, Typography, Box, Grid, Card, CardContent, Container, Snackbar, CircularProgress, TextField
@@ -38,6 +38,8 @@ const OrderReport: React.FC = () => {
   const [flashMessage, setFlashMessage] = useState<string>('');
   const [flashSeverity, setFlashSeverity] = useState<'success' | 'error'>('success');
 
+
+
   const getPalletData = useCallback(async (page: number) => {
     if (loading) return;
 
@@ -55,16 +57,17 @@ const OrderReport: React.FC = () => {
   }, [dispatch, formData]);
 
   useEffect(() => {
-    if (isAuthenticated) {
-      getPalletData(1);
-      dispatch(ordersCostAction());
-    }
+    // if (isAuthenticated) {
+    getPalletData(1);
+    dispatch(ordersCostAction());
 
-    
-return () => {
+    // }
+
+
+    return () => {
       dispatch(unmountOrderAction());
     }
-  }, [isAuthenticated]);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -74,8 +77,8 @@ return () => {
     };
 
     window.addEventListener('scroll', handleScroll);
-    
-return () => window.removeEventListener('scroll', handleScroll);
+
+    return () => window.removeEventListener('scroll', handleScroll);
   }, [pageNo, hasMore, loading]);
 
   const onFieldChange = (name: string, value: string | null) => {
@@ -94,7 +97,12 @@ return () => window.removeEventListener('scroll', handleScroll);
     setPageNo(1);
     setHasMore(true);
     dispatch(clearOrderAction());
+    setTimeout(() => {
+      setFormData({});
+    }, 0);
   };
+
+  if (!isAuthenticated) return null; // Prevent rendering if not authenticated
 
   const ordersData = () => {
     return (
@@ -133,7 +141,7 @@ return () => window.removeEventListener('scroll', handleScroll);
     );
   };
 
-  if (!isAuthenticated) return null; // Prevent rendering if not authenticated
+
 
   return (
     <Container>
@@ -194,7 +202,9 @@ return () => window.removeEventListener('scroll', handleScroll);
                     label="Start Date"
                     value={formData.startDate ? dayjs(formData.startDate) : null}
                     onChange={(newValue) => onFieldChange('startDate', newValue ? newValue.format('YYYY-MM-DD') : null)}
-                    renderInput={(params) => <TextField {...params} fullWidth size="medium" />}
+                    slotProps={{
+                      textField: { fullWidth: true, size: "medium" }
+                    }}
                   />
                 </LocalizationProvider>
               </Grid>
@@ -204,7 +214,9 @@ return () => window.removeEventListener('scroll', handleScroll);
                     label="End Date"
                     value={formData.endDate ? dayjs(formData.endDate) : null}
                     onChange={(newValue) => onFieldChange('endDate', newValue ? newValue.format('YYYY-MM-DD') : null)}
-                    renderInput={(params) => <TextField {...params} fullWidth size="medium" />}
+                    slotProps={{
+                      textField: { fullWidth: true, size: "medium" }
+                    }}
                   />
                 </LocalizationProvider>
               </Grid>

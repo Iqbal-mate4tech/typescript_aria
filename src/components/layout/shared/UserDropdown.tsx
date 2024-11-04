@@ -65,12 +65,12 @@ const UserDropdown = () => {
   const handleUserLogout = async () => {
     // Redirect to login page
     router.push('/user_master')
-    const userId = localStorage.getItem('user');
-                                const userName = localStorage.getItem('userName');
+    const userId:any = localStorage.getItem('user');
+    const userName:any = localStorage.getItem('userName');
 
-                                localStorage.clear();
-                                localStorage.setItem('user', userId);
-                                localStorage.setItem('userName', userName);
+    localStorage.clear();
+    localStorage.setItem('user', userId);
+    localStorage.setItem('userName', userName);
   }
 
   return (

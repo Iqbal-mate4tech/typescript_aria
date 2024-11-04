@@ -1,10 +1,10 @@
 export const messages = {
-    requiredSignInField: 'Please fill all the required fields.',
+    requiredSignInField: 'Please fill all the required fields.'
 };
 
 export const apiUrl = {
-    baseApiUrl: 'https://cd68-2409-4054-11d-2421-6cbb-ee09-95f2-d769.ngrok-free.app',
-    baseOdooApiUrl: 'https://test.askmonty.com.au/',
+    baseApiUrl: 'https://beanstalktest.askmonty.com.au',
+    baseOdooApiUrl: 'https://test.askmonty.com.au',
     userLogin: '/login',
     userLogout: '/userlogout',
     palletStatus: '/getpalletstatus',
@@ -29,6 +29,15 @@ export const apiUrl = {
     addPalletAndItems: '/addupdatepalletanditem',
     onlineOrders: '/getonlineorders',
     getDescription: '/productCartonQuantity?barcode={0}',
+
+    getDIDdescription: '/diddescription?did_reference={0}&barcode={1}',
+    getITOdescription_new: '/itodescription?ito_reference={0}&barcode={1}',
+    
+    getDiDnumbervalid: '/didnumbervalid?did_number={0}&store_id={1}',
+    getITOnumbervalid: '/itonumbervalid?ito_number={0}',
+
+    getStorePO: '/get_pallet_po?store_id={0}',
+    
     getProductQuantityDetails: '/productQuantityDetails?barcode={0}&warehouse_id={1}',
     getITODetails: '/getITODetails',
     syncPrice: '/syncprice',
@@ -52,8 +61,8 @@ export const apiUrl = {
     getPO: '/getpoanditems',
     getPOStatus: '/rexgetreceivestatusid',
     poItemsById: '/getpoitemsbyid?id={0}',
-    getIto:'/getito?ITOID={0}',
-    updateQty:'/updatecartonqty',
+    getIto: '/getito?ITOID={0}',
+    updateQty: '/updatecartonqty',
     getPoid: '/getpoid?poid={0}',
     getpo: '/get_po_data?poId={0}',
     updateqty: '/update_qty_to_receive?orderline_id={0}&qty_to_receive={1}',
@@ -62,31 +71,31 @@ export const apiUrl = {
     receivePO: '/rexreceivepo',
     receivePOnew: '/rexreceiveponew',
     uploadPO: '/rexuploadpo',
-    getPOStatusAndItemCount: '/rexgetpostatusanditemcount?id={0}',
+    getPOStatusAndItemCount: '/rexgetpostatusanditemcount?id={0}'
 };
 
 export const webUrl = {
-    signIn: '/user_master',
+    signIn: '/signin',
     pallet: '/pallet',
     palletnew: '/palletnew',
-    addUpdatePallet: "/add-update-pallet",
-    palletBooking: "/pallet-booking",
-    palletDispatch: "/pallet-dispatch",
-    distribution: "/distribution",
+    addUpdatePallet: '/add-update-pallet',
+    palletBooking: '/pallet-booking',
+    palletDispatch: '/pallet-dispatch',
+    distribution: '/distribution',
     warehouse: '/warehouse',
     estore: '/estore',
     product: '/product',
     linodeObjectUrl: 'https://aria-images.us-east-1.linodeobjects.com/',
-    shipper: '/shipper_master',
-    palletType: '/pallet_type_master',
-    user: '/user-master',
+    shipper: '/shipper',
+    palletType: '/pallettype',
+    user: '/user',
     category: '/category',
-    purchaseOrder: '/purchase_order',
-    receivePO: '/receive-po',
-    receivePONew: '/receive_po_new',
-    receivePONewodoo: '/receive_po_odoo',
+    purchaseOrder: '/purchaseorder',
+    receivePO: '/receivepo',
+    receivePONew: '/receiveponew',
+    receivePONewodoo: '/receiveponewodoo'
 };
 
 export const config = {
-    BRISBANE_TIME_ZONE: 'Australia/Brisbane',
+    BRISBANE_TIME_ZONE: 'Australia/Brisbane'
 };

@@ -1,115 +1,237 @@
-import React from 'react';
+// components/PalletItemModal.tsx
+import React, { useState, useEffect, ChangeEvent, FocusEvent } from 'react';
 
 import {
-  Modal, Box, Card, CardContent, CardHeader, TextField, Button, Grid, Typography
+  Dialog, DialogTitle, DialogContent, DialogActions,
+  Button, TextField, RadioGroup, FormControlLabel,
+  Radio, Alert, Grid, Typography
 } from '@mui/material';
 
+// Define the props using TypeScript types
 interface PalletItemModalProps {
+  modal: any;
   showModal: boolean;
-  closeModal: () => void;
-  modal: {
-    id?: string | number;
-    itoNumber: string;
-    barcode: string;
-    description: string;
-    quantity: string;
-    outer: string;
-    inner: string;
-  };
-  userName: string;
+  onBarcodeBlur: (e: FocusEvent<HTMLInputElement>) => void;
   onModalFieldChange: (name: string, value: string) => void;
-  onBarcodeBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
+  userName: string;
   onDoneClick: () => void;
+  closeModal: () => void;
+  handleFieldChange: (name: string, value: string) => void;
+  sendingInner: boolean;
+  setSendingInner: (value: boolean) => void;
+  handleDidNumberBlur: (e: FocusEvent<HTMLInputElement>) => Promise<string>;
+  didNumberError: string;
+  setDidNumberError: (error: string) => void;
 }
 
-const PalletItemModal: React.FC<PalletItemModalProps> = (props) => {
-  const { showModal, closeModal, modal, userName, onModalFieldChange, onBarcodeBlur, onDoneClick } = props;
+const PalletItemModal: React.FC<PalletItemModalProps> = ({
+  modal,
+  showModal,
+  onBarcodeBlur,
+  onModalFieldChange,
+  userName,
+  onDoneClick,
+  closeModal,
+  handleFieldChange,
+  sendingInner,
+  setSendingInner,
+  handleDidNumberBlur,
+  didNumberError,
+  setDidNumberError,
+}) => {
+  const [alertMessage, setAlertMessage] = useState('');
+  const [showAlert, setShowAlert] = useState(false);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+  const handleDidBlur = async (e: FocusEvent<HTMLInputElement>) => {
+    const didNumber = e.target.value;
+
+    if (!didNumber) {
+      setDidNumberError(''); // Clear the error if the field is empty
+
+      return;
+    }
+
+    const errorMessage = await handleDidNumberBlur(e);
+
+    setDidNumberError(errorMessage); // Update the error state
+  };
+
+  const Quantity = sendingInner
+    ? modal.quantity * modal.inner
+    : modal.quantity * modal.outer;
+
+  const isQuantityExceeded = (): boolean => {
+    const enteredQuantity = parseInt(String(Quantity), 10) || 0;
+    const availableQuantity = parseInt(modal.oh_quantity, 10) || 0;
+
+
+    return enteredQuantity > availableQuantity;
+  };
+
+  useEffect(() => {
+    const didNumberInvalid = !!didNumberError;
+    const quantityInvalid = !modal.quantity || modal.quantity <= 0;
+
+    setIsButtonDisabled(didNumberInvalid || quantityInvalid);
+  }, [modal.quantity, didNumberError, Quantity]);
 
   return (
-    <Modal open={showModal} onClose={closeModal} aria-labelledby="pallet-item-modal">
-      <Box sx={{ maxWidth: 500, mx: 'auto', mt: 5, p: 2 }}>
-        <Card>
-          <CardHeader
-            title={modal.id && modal.id > 0 ? 'Update Item' : 'Add Item'}
-            sx={{ textAlign: 'center', backgroundColor: '#f5f5f5' }}
-          />
-          <CardContent>
-            <Box sx={{ mb: 2 }}>
-              <TextField
-                label="DID Number"
-                variant="outlined"
-                fullWidth
-                value={modal.itoNumber}
-                onChange={(e) => onModalFieldChange('itoNumber', e.target.value)}
-              />
-            </Box>
-            <Box sx={{ mb: 2 }}>
-              <TextField
-                label="Barcode"
-                variant="outlined"
-                fullWidth
-                value={modal.barcode}
-                onBlur={onBarcodeBlur}
-                onChange={(e) => onModalFieldChange('barcode', e.target.value)}
-              />
-            </Box>
-            <Box sx={{ mb: 2 }}>
-              <TextField
-                label="Description"
-                variant="outlined"
-                fullWidth
-                value={modal.description}
-                onChange={(e) => onModalFieldChange('description', e.target.value)}
-              />
-            </Box>
-            <Box sx={{ mb: 2 }}>
-              <TextField
-                label="Quantity"
-                variant="outlined"
-                fullWidth
-                value={modal.quantity}
-                onChange={(e) => onModalFieldChange('quantity', e.target.value)}
-              />
-            </Box>
-            <Box sx={{ mb: 2 }}>
-              <TextField
-                label="Outer"
-                variant="outlined"
-                fullWidth
-                value={modal.outer}
-                onChange={(e) => onModalFieldChange('outer', e.target.value)}
-              />
-            </Box>
-            <Box sx={{ mb: 2 }}>
-              <TextField
-                label="Inner"
-                variant="outlined"
-                fullWidth
-                value={modal.inner}
-                onChange={(e) => onModalFieldChange('inner', e.target.value)}
-              />
-            </Box>
-            <Box sx={{ mb: 2 }}>
-              <Typography variant="body2">
-                Added By: <strong>{userName}</strong>
-              </Typography>
-            </Box>
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <Button variant="contained" color="primary" fullWidth onClick={onDoneClick}>
-                  Done
-                </Button>
-              </Grid>
-              <Grid item xs={6}>
-                <Button variant="outlined" color="secondary" fullWidth onClick={closeModal}>
-                  Close
-                </Button>
-              </Grid>
-            </Grid>
-          </CardContent>
-        </Card>
-      </Box>
-    </Modal>
+    <Dialog open={showModal} onClose={closeModal} maxWidth="md" fullWidth>
+      <DialogTitle>{modal.id ? 'Update Item' : 'Add Item'}</DialogTitle>
+      <DialogContent dividers>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Typography variant="subtitle1">Sending</Typography>
+            <RadioGroup
+              row
+              value={sendingInner ? 'inner' : 'outer'}
+              onChange={(e) => {
+                const isInner = e.target.value === 'inner';
+
+                setSendingInner(isInner);
+                handleFieldChange('sendingInner', String(isInner));
+              }}
+            >
+              <FormControlLabel value="inner" control={<Radio />} label="Inner" />
+              <FormControlLabel value="outer" control={<Radio />} label="Outer" />
+            </RadioGroup>
+          </Grid>
+
+          <Grid item xs={6}>
+            <TextField
+              label="DID Number"
+              name="did_Number"
+              value={modal.did_Number}
+              onChange={(e) => onModalFieldChange(e.target.name, e.target.value)}
+              onBlur={handleDidBlur}
+              error={!!didNumberError}
+              helperText={didNumberError}
+              fullWidth
+            />
+          </Grid>
+
+          <Grid item xs={6}>
+            <TextField
+              label="Barcode"
+              name="barcode"
+              value={modal.barcode}
+              onBlur={onBarcodeBlur}
+              onChange={(e) => onModalFieldChange(e.target.name, e.target.value)}
+              fullWidth
+            />
+          </Grid>
+
+          <Grid item xs={6}>
+            <TextField
+              label="Description"
+              name="description"
+              value={modal.description}
+              disabled
+              fullWidth
+            />
+          </Grid>
+
+          <Grid item xs={6}>
+            <TextField
+              label="Outer"
+              name="outer"
+              value={modal.outer}
+              disabled
+              fullWidth
+            />
+          </Grid>
+
+          <Grid item xs={6}>
+            <TextField
+              label="Qty to Send"
+              name="qty_to_send"
+              value={modal.qty_to_send}
+              disabled
+              fullWidth
+            />
+          </Grid>
+
+          <Grid item xs={6}>
+            <TextField
+              label="Remaining Qty"
+              name="remaining_qty"
+              value={modal.remaining_qty}
+              disabled
+              fullWidth
+            />
+          </Grid>
+
+          <Grid item xs={6}>
+            <TextField
+              label="OnHand Quantity"
+              name="oh_quantity"
+              value={modal.oh_quantity}
+              disabled
+              fullWidth
+            />
+          </Grid>
+
+          <Grid item xs={12}>
+            <Typography
+              variant="body1"
+              color={isQuantityExceeded() ? 'error' : 'success'}
+            >
+              {parseInt(modal.oh_quantity, 10) === 0
+                ? 'There is no stock available to add this item into pallet'
+                : isQuantityExceeded()
+                  ? 'Quantity exceeds available amount'
+                  : `Available stock: ${modal.oh_quantity}`}
+            </Typography>
+          </Grid>
+
+          <Grid item xs={6}>
+            <TextField
+              label={sendingInner ? 'Add Number of Inners' : 'Add Number of Cartons'}
+              name="quantity"
+              value={modal.quantity}
+              onChange={(e) => handleFieldChange(e.target.name, e.target.value)}
+              fullWidth
+            />
+          </Grid>
+
+          <Grid item xs={6}>
+            <Typography variant="body1">
+              <strong>Added By: {userName}</strong>
+            </Typography>
+          </Grid>
+        </Grid>
+      </DialogContent>
+
+      <DialogActions>
+        <Grid container spacing={2} justifyContent="flex-end">
+          <Grid item md={3} xs={6} >
+            <Button
+              onClick={onDoneClick}
+              disabled={isButtonDisabled}
+              variant="contained" className="w-full" size="large" style={{ padding: '15px 0' }} fullWidth
+            >
+              Done
+            </Button>
+          </Grid>
+          <Grid item md={3} xs={6}>
+            <Button onClick={closeModal}
+              variant="contained" className="w-full" size="large" style={{ padding: '15px 0' }} fullWidth>
+              Close
+            </Button>
+          </Grid>
+        </Grid>
+      </DialogActions>
+
+      {showAlert && (
+        <Alert
+          severity="warning"
+          onClose={() => setShowAlert(false)}
+        >
+          {alertMessage}
+        </Alert>
+      )}
+    </Dialog>
   );
 };
 

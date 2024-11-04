@@ -26,11 +26,12 @@ import {
     PO_QUANTITY_RECEIVED: 'PO_QUANTITY_RECEIVED'
   };
   
-  export interface POActionPayload {
-    [key: string]: any;
+  interface Action {
+    type: any;
+    payload?: any;
   }
   
-  export const receivedPOAction = (payload: POActionPayload) => ({
+  export const receivedPOAction = (payload: any):Action => ({
     type: actionTypes.PO_RECEIVED,
     payload
   });
@@ -45,7 +46,7 @@ import {
         if (data && data.page < 2) dispatch(stopLoaderAction('poItems'));
   
         if (data && data.page > 1) {
-          const state = { ...getState() };
+          const state = Object.assign({}, getState());
 
           response[0] = [...state.purchaseOrder.po[0], ...response[0]];
         }
@@ -69,12 +70,12 @@ return false;
     type: actionTypes.PO_CLEAR
   });
   
-  export const receivedPOItemsAction = (payload: POActionPayload) => ({
+  export const receivedPOItemsAction = (payload: any):Action => ({
     type: actionTypes.PO_ITEMS_RECEIVED,
     payload
   });
   
-  export const poItemsAction = (id: string) => {
+  export const poItemsAction = (id: any) => {
     return async (dispatch: AppDispatch) => {
       dispatch(showLoaderAction('pOItems'));
   
@@ -96,7 +97,7 @@ return false;
     };
   };
   
-  export const receivedPOStatusAction = (payload: POActionPayload) => ({
+  export const receivedPOStatusAction = (payload: any):Action => ({
     type: actionTypes.PO_STATUS_RECEIVED,
     payload
   });
@@ -116,7 +117,7 @@ return false;
     };
   };
   
-  export const receivedPOStoreAction = (payload: POActionPayload) => ({
+  export const receivedPOStoreAction = (payload: any):Action => ({
     type: actionTypes.PO_STORE_RECEIVED,
     payload
   });
@@ -136,12 +137,12 @@ return false;
     };
   };
   
-  export const receivedPOQuantityAction = (payload: POActionPayload) => ({
+  export const receivedPOQuantityAction = (payload: any):Action => ({
     type: actionTypes.PO_QUANTITY_RECEIVED,
     payload
   });
   
-  export const poQuantityAction = (data: { searchPOId: string; supplierSku: string }) => {
+  export const poQuantityAction = (data: { searchPOId: any; supplierSku: any }) => {
     return async (dispatch: AppDispatch) => {
       dispatch(showLoaderAction('poQuantity'));
   
@@ -196,7 +197,7 @@ return false;
     };
   };
   
-  export const poStatusAndItemCountAction = (data: string) => {
+  export const poStatusAndItemCountAction = (data: any) => {
     return async (dispatch: AppDispatch) => {
       dispatch(showLoaderAction('poStatusAndItemCount'));
   

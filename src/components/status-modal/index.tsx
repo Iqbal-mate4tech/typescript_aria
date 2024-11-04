@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {
-  Card, CardContent, CardHeader, Button,
+  Card, CardContent, Button,
   Dialog, DialogTitle, DialogContent, DialogActions,
   Grid, Typography
 } from '@mui/material';
@@ -13,13 +13,14 @@ interface StatusModalProps {
   palletStatus: Array<{ [key: string]: string | number }>;
   status: string;
   userName: string;
+  userType: any;
   onModalFieldChange: (name: string, value: string | number) => void;
   onDoneClick: () => void;
   closeModal: () => void;
 }
 
 const StatusModal: React.FC<StatusModalProps> = (props) => {
-  const { showModal, palletStatus, status, userName, onModalFieldChange, onDoneClick, closeModal } = props;
+  const { showModal, palletStatus, status, userName, userType, onModalFieldChange, onDoneClick, closeModal } = props;
 
   return (
     <Dialog open={showModal} onClose={closeModal} fullWidth maxWidth="sm">
@@ -35,8 +36,8 @@ const StatusModal: React.FC<StatusModalProps> = (props) => {
                 <SingleSelect
                   name="status"
                   options={palletStatus}
-                  optionValue={(localStorage.getItem('userType') === 'manager' || localStorage.getItem('userType') === 'admin' || localStorage.getItem('userType') === 'buyer') ? 'status_name' : 'status'}
-                  optionName={(localStorage.getItem('userType') === 'manager' || localStorage.getItem('userType') === 'admin' || localStorage.getItem('userType') === 'buyer') ? 'status_name' : 'status'}
+                  optionValue={(userType === 'manager' || userType === 'admin' || userType === 'buyer') ? 'status_name' : 'status'}
+                  optionName={(userType === 'manager' || userType === 'admin' || userType === 'buyer') ? 'status_name' : 'status'}
                   value={status}
                   onChange={onModalFieldChange}
                 />

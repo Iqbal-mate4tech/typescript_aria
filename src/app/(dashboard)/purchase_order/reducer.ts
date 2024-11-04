@@ -3,21 +3,26 @@ import type { POActionPayload } from './action';
 import { actionTypes } from './action';
 
 /** Initial state */
-interface PurchaseOrderState {
-  po?: any; // Replace 'any' with the specific type of your 'po' data
-  poItems?: any; // Replace 'any' with the specific type of your 'poItems' data
-  poStatus?: any; // Replace 'any' with the specific type of your 'poStatus' data
-  poStore?: any; // Replace 'any' with the specific type of your 'poStore' data
-  poQuantity?: any; // Replace 'any' with the specific type of your 'poQuantity' data
-  error?: string | null;
+// interface PurchaseOrderState {
+//   po?: any; // Replace 'any' with the specific type of your 'po' data
+//   poItems?: any; // Replace 'any' with the specific type of your 'poItems' data
+//   poStatus?: any; // Replace 'any' with the specific type of your 'poStatus' data
+//   poStore?: any; // Replace 'any' with the specific type of your 'poStore' data
+//   poQuantity?: any; // Replace 'any' with the specific type of your 'poQuantity' data
+//   error?: string | null;
+// }
+interface Action {
+  type: any;
+  payload?: any;
 }
 
-const initialState: PurchaseOrderState = {
+const initialState: any = {
+  data: [],
   error: null,
 };
 
 /** Reducer */
-export default (state = initialState, action: { type: string; payload: POActionPayload }): PurchaseOrderState => {
+export default (state = initialState, action: Action): any => {
   const { type, payload } = action;
 
   switch (type) {

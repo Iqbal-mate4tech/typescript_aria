@@ -13,11 +13,11 @@ import {
 interface DirectToStoreProps {
   showModal: boolean;
   closeModal: () => void;
-  noOfPallet: string;
+  noOfPallet: any;
   setNoOfPallet: (value: string) => void;
-  supplier: string;
+  supplier: any;
   setSupplier: (value: string) => void;
-  conNumber: string;
+  conNumber: any;
   setConNumber: (value: string) => void;
   onDoneClick: () => void;
 }
@@ -27,7 +27,7 @@ const DirectToStore: React.FC<DirectToStoreProps> = (props) => {
     <Dialog open={props.showModal} onClose={props.closeModal} className="direct-to-store-modal">
       <DialogTitle>Direct to Store</DialogTitle>
       <DialogContent>
-        <Grid container spacing={2}>
+        <Grid container spacing={2} style={{ marginTop: '10px' }}>
           <Grid item xs={12}>
             <TextField
               fullWidth

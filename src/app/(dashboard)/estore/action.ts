@@ -14,36 +14,36 @@ export const actionTypes = {
   ORDER_COST_RECEIVED: 'ORDER_COST_RECEIVED'
 };
 
-interface OrderData {
-  id: number;
-  order_number: string;
-  total_price: string;
-  processed_at: string;
-  order_status_url: string;
-}
+// interface OrderData {
+//   id: number;
+//   order_number: string;
+//   total_price: string;
+//   processed_at: string;
+//   order_status_url: string;
+// }
 
-interface OrdersResponse {
-  orders: OrderData[];
-}
+// interface OrdersResponse {
+//   orders: OrderData[];
+// }
 
-interface OrderCostResponse {
-  total_cost: number;
-}
+// interface OrderCostResponse {
+//   total_cost: number;
+// }
 
-interface OrdersActionData {
-  startDate?: string;
-  endDate?: string;
-  page: number;
-}
+// interface OrdersActionData {
+//   startDate?: string;
+//   endDate?: string;
+//   page: number;
+// }
 
-export const receivedOrdersAction = (payload: OrdersResponse[]) => ({
+export const receivedOrdersAction = (payload: any) => ({
   type: actionTypes.ORDER_RECEIVED,
   payload
 });
 
-export const ordersAction = (data: OrdersActionData) => {
+export const ordersAction = (data: any) => {
   return async (dispatch: AppDispatch, getState: () => any) => {
-    if (data.page < 2) {
+    if (data && data.page < 2) {
       dispatch(showLoaderAction('orders'));
     }
 
@@ -62,14 +62,15 @@ export const ordersAction = (data: OrdersActionData) => {
     try {
       const response = await getOnlineOrders(request);
 
-      if (data.page < 2) {
+      if (data && data.page < 2) {
         dispatch(stopLoaderAction('orders'));
       }
 
-      const parsedResponse = [JSON.parse(response[0]), JSON.parse(response[1])] as OrdersResponse[];
+      // const parsedResponse = [JSON.parse(response[0]), JSON.parse(response[1])] as OrdersResponse[];
+      const parsedResponse = [JSON.parse(response[0]), JSON.parse(response[1])];
 
-      if (data.page > 1) {
-        const state = getState();
+      if (data && data.page > 1) {
+        const state = Object.assign({}, getState());
 
         parsedResponse[0].orders = [...state.order.orders[0].orders, ...parsedResponse[0].orders];
       }
@@ -77,10 +78,12 @@ export const ordersAction = (data: OrdersActionData) => {
       dispatch(receivedOrdersAction(parsedResponse));
       
 return parsedResponse;
+
+// return parsedResponse;
       
 // return true;
     } catch (error) {
-      if (data.page < 2) {
+      if (data && data.page < 2) {
         dispatch(stopLoaderAction('orders'));
       }
 
@@ -100,7 +103,7 @@ export const clearOrderAction = () => ({
   type: actionTypes.ORDERS_CLEAR
 });
 
-export const receivedOrdersCostAction = (payload: OrderCostResponse) => ({
+export const receivedOrdersCostAction = (payload: any) => ({
   type: actionTypes.ORDER_COST_RECEIVED,
   payload
 });

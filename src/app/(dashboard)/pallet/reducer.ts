@@ -1,30 +1,34 @@
 import { actionTypes } from './action';
 
-interface PalletState {
-    data: any[];
-    error: string | null;
-    formData: {
-        palletIds: any[];
-        [key: string]: any;
-    };
-    palletStatus?: any;
-    palletCategory?: any;
-    palletStore?: any;
-    pallets?: any;
-    palletItems?: any;
-    palletBuilders?: any;
-    palletTypes?: any;
-    palletShipper?: any;
-    syncStatus?: boolean;
+// interface PalletState {
+//     data: any[];
+//     error: string | null;
+//     formData?: { palletIds: any[] };
+//     palletStatus?: any;
+//     palletCategory?: any;
+//     palletStore?: any;
+//     pallets?: any;
+//     palletItems?: any[];
+//     palletBuilders?: any;
+//     palletTypes?: any;
+//     palletShipper?: any;
+//     syncStatus?: boolean;
+// }
+
+interface Action {
+    type: any;
+    payload?: any;
 }
 
-const initialState: PalletState = {
+/** Initial state */
+const initialState: any = {
     data: [],
     error: null,
     formData: { palletIds: [] }
 };
 
-const palletReducer = (state = initialState, action: any): PalletState => {
+/** Reducers */
+const palletReducer = (state = initialState, action: Action): any => {
     const { type, payload } = action;
 
     switch (type) {

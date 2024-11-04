@@ -73,7 +73,7 @@ const UserMasterModal: React.FC<UserMasterModalProps> = (props) => {
                   optionValue="user_type"
                   optionName="user_type"
                   value={type}
-                  onChange={(name, value) => setType(value)}
+                  onChange={(name, value:any) => setType(value)}
                 />
               </Grid>
 

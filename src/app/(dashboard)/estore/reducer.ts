@@ -1,29 +1,31 @@
 import { actionTypes } from './action';
 
 /** Action Types */
-interface OrderReceivedAction {
-  type: typeof actionTypes.ORDER_RECEIVED;
-  payload: any[]; // Define the appropriate type for payload if known
-}
+// interface OrderReceivedAction {
+//   type: typeof actionTypes.ORDER_RECEIVED;
+//   payload: any; // Define the appropriate type for payload if known
+// }
 
-interface OrderUnmountAction {
-  type: typeof actionTypes.ORDER_UNMOUNT;
-}
+// interface OrderUnmountAction {
+//   type: typeof actionTypes.ORDER_UNMOUNT;
+//   payload: any;
+// }
 
-interface OrdersClearAction {
-  type: typeof actionTypes.ORDERS_CLEAR;
-}
+// interface OrdersClearAction {
+//   type: typeof actionTypes.ORDERS_CLEAR;
+//   payload: any;
+// }
 
-interface OrderCostReceivedAction {
-  type: typeof actionTypes.ORDER_COST_RECEIVED;
-  payload: any; // Define the appropriate type for payload if known
-}
+// interface OrderCostReceivedAction {
+//   type: typeof actionTypes.ORDER_COST_RECEIVED;
+//   payload: any; // Define the appropriate type for payload if known
+// }
 
-type OrderActionTypes =
-  | OrderReceivedAction
-  | OrderUnmountAction
-  | OrdersClearAction
-  | OrderCostReceivedAction;
+// type OrderActionTypes =
+//   | OrderReceivedAction
+//   | OrderUnmountAction
+//   | OrdersClearAction
+//   | OrderCostReceivedAction;
 
 /** Initial State Type */
 interface OrderState {
@@ -42,7 +44,7 @@ const initialState: OrderState = {
 };
 
 /** Reducers */
-export default (state = initialState, action: OrderActionTypes): OrderState => {
+export default (state = initialState, action: any): OrderState => {
   const { type, payload } = action;
 
   switch (type) {

@@ -44,7 +44,7 @@ import '@assets/iconify-icons/generated-icons.css';
 import Providers from '../components/Providers';
 
 export const metadata = {
-  title: 'Materio - Material Design Next.js Admin Template',
+  title: 'Pallet Tracker App Designed and developed by Mate4Tech',
   description: 'Materio - Material Design Next.js Admin Dashboard Template - is the most developer friendly & highly customizable Admin Dashboard Template based on MUI v5.'
 };
 

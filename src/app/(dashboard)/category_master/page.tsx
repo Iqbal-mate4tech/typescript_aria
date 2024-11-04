@@ -10,8 +10,8 @@ import { useSelector } from 'react-redux';
 
 import { useAppDispatch, type RootState } from '@/app/store';
 import useAuth from '@/components/withAuth';
-import  AppHeader  from '@/components/app-header';
-import  MasterModal  from '@/components/master-modal';
+import AppHeader from '@/components/app-header';
+import MasterModal from '@/components/master-modal';
 import { AppAlert } from '@/components/app-alert';
 import { palletCategoryAction } from '../pallet/action';
 import { deleteCategoryAction, addUpdateCategoryAction } from '../../action';
@@ -31,7 +31,7 @@ const CategoryMaster: React.FC = () => {
   const dispatch = useAppDispatch();
   const category = useSelector((state: RootState) => state.pallet.palletCategory);
 
-  const [id, setId] = useState<number | undefined>(undefined);
+  const [id, setId] = useState<any>(undefined);
   const [name, setName] = useState<string>('');
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showAlert, setShowAlert] = useState<boolean>(false);
@@ -41,17 +41,20 @@ const CategoryMaster: React.FC = () => {
   const [flashMessage, setFlashMessage] = useState<string>('');
   const [flashSeverity, setFlashSeverity] = useState<'success' | 'error'>('success');
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      dispatch(palletCategoryAction());
-    }
-  }, [isAuthenticated, dispatch]);
 
-  const onAddClick = () => {
+
+  useEffect(() => {
+    // if (isAuthenticated) {
+    dispatch(palletCategoryAction());
+
+    // }
+  }, []);
+
+  const onAddClick = (): void => {
     setShowModal(true);
   };
 
-  const closeModal = () => {
+  const closeModal = (): void => {
     setShowModal(false);
     setId(undefined);
     setName('');
@@ -91,7 +94,7 @@ const CategoryMaster: React.FC = () => {
   const onDeleteClick = async () => {
     if (id !== undefined) {
       const response = await dispatch(deleteCategoryAction(id));
-  
+
       if (response) {
         setShowConfirm(false);
         dispatch(palletCategoryAction());
@@ -105,13 +108,15 @@ const CategoryMaster: React.FC = () => {
       setShowAlert(true);
     }
   };
-  
+
 
   const showFlashMessage = (message: string, severity: 'success' | 'error') => {
     setFlashMessage(message);
     setFlashSeverity(severity);
     setOpenSnackbar(true);
   };
+
+  if (!isAuthenticated) return null; // Prevent rendering if not authenticated
 
   const renderCards = () => {
     return category && Array.isArray(category) ? (
@@ -127,7 +132,8 @@ const CategoryMaster: React.FC = () => {
                 <Tooltip title="Edit">
                   <IconButton
                     color="primary"
-                    onClick={() => {
+                    onClick={(e: any) => {
+                      e.stopPropagation();
                       setShowModal(true);
                       setId(value.category_id);
                       setName(value.category_name);
@@ -139,7 +145,8 @@ const CategoryMaster: React.FC = () => {
                 <Tooltip title="Delete">
                   <IconButton
                     color="error"
-                    onClick={() => {
+                    onClick={(e: any) => {
+                      e.stopPropagation();
                       setShowConfirm(true);
                       setAlertMessage('Are you sure you want to delete?');
                       setId(value.category_id);
@@ -160,7 +167,7 @@ const CategoryMaster: React.FC = () => {
     );
   };
 
-  if (!isAuthenticated) return null; // Prevent rendering if not authenticated
+
 
   return (
     <Container>
@@ -188,7 +195,7 @@ const CategoryMaster: React.FC = () => {
         btnCancelText="Cancel"
         btnOkText="Yes"
         okClick={onDeleteClick} // Delete and close the dialog
-        cancelClick={() => setShowConfirm(false)}
+        cancelClick={() => { setShowConfirm(false); setId(0) }}
       />
       <AppAlert
         showAlert={showAlert}

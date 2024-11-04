@@ -4,14 +4,14 @@ import { palletStoreAction, palletShipperAction, receivedPalletsAction } from '.
 import { palletByStatus, updatePalletShippingStatus } from '../pallet/service';
 import { stopLoaderAction, showLoaderAction } from '../../(dashboard)/user_master/action';
 
-interface PalletByStatusData {
-  page: number;
-  [key: string]: any;
-}
+// interface PalletByStatusData {
+//   page: number;
+//   [key: string]: any;
+// }
 
-interface UpdatePalletShippingStatusData {
-  [key: string]: any;
-}
+// interface UpdatePalletShippingStatusData {
+//   [key: string]: any;
+// }
 
 export const palletBookingMasterDataAction = () => {
   return (dispatch: AppDispatch) => {
@@ -20,21 +20,21 @@ export const palletBookingMasterDataAction = () => {
   };
 };
 
-export const palletByStatusAction = (data: PalletByStatusData) => {
+export const palletByStatusAction = (data: any) => {
   return async (dispatch: AppDispatch, getState: () => any) => {
-    if (data.page < 2) {
+    if (data && data.page < 2) {
       dispatch(showLoaderAction('palletByStatus'));
     }
 
     try {
       const response = await palletByStatus(data);
 
-      if (data.page < 2) {
+      if (data && data.page < 2) {
         dispatch(stopLoaderAction('palletByStatus'));
       }
 
-      if (data.page > 1) {
-        const state = getState();
+      if (data && data.page > 1) {
+        const state = Object.assign({}, getState());
 
         response[0] = [...state.pallet.pallets[0], ...response[0]];
       }
@@ -43,7 +43,7 @@ export const palletByStatusAction = (data: PalletByStatusData) => {
       
 return true;
     } catch (error) {
-      if (data.page < 2) {
+      if (data && data.page < 2) {
         dispatch(stopLoaderAction('palletByStatus'));
       }
 
@@ -53,7 +53,7 @@ return false;
   };
 };
 
-export const updatePalletShippingStatusAction = (data: UpdatePalletShippingStatusData) => {
+export const updatePalletShippingStatusAction = (data: any) => {
   return async (dispatch: AppDispatch) => {
     dispatch(showLoaderAction('updatePalletShippingStatus'));
 

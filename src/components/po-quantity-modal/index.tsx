@@ -9,7 +9,7 @@ interface POQuantityModalProps {
   closeModal: () => void;
   poId?: string;
   sku?: string;
-  description: string;
+  description?: string;
   qtyOrdered: string;
   qtyReceivedAlready: string;
   qtyReceived: string;

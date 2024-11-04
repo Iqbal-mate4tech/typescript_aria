@@ -117,7 +117,7 @@
 //             <IconButton className="mr-2">
 //               {errorMessage}
 //             </IconButton>
-            
+
 //           </Alert>
 //         )}
 //         <Button
@@ -143,30 +143,164 @@
 // };
 
 // export default connect(mapStateToProps, mapDispatchToProps)(SignIn);
+// 'use client';
+
+// import React, { useState, useEffect } from 'react';
+
+// import { useRouter } from 'next/navigation';
+
+// import { useSelector   } from 'react-redux';
+
+// import { Button, TextField, IconButton, Alert } from '@mui/material';
+
+// import { useAppDispatch, type RootState } from '../../store';
+// import { userLoginAction, unmountUserAction } from './action';
+// import { messages, webUrl } from '../../../shared/constants';
+// import { initialiseAddToHomeService } from '@/components/add-to-home';
+
+
+
+// const SignIn: React.FC = () => {
+//   const router = useRouter();
+//   const dispatch = useAppDispatch();
+
+//   const user = useSelector((state: RootState) => state.user);
+
+//   const [userData, setUserData] = useState({
+//     userId: '',
+//     userPwd: '',
+//     userName: '',
+//   });
+
+//   const [errorMessage, setErrorMessage] = useState('');
+
+//   useEffect(() => {
+//     const user = localStorage.getItem('user');
+//     const name = localStorage.getItem('userName');
+
+//     setUserData((prevData) => ({
+//       ...prevData,
+//       userId: user || '',
+//       userName: name || '',
+//     }));
+
+//     localStorage.clear();
+//     dispatch(unmountUserAction());
+//     initialiseAddToHomeService();
+//   }, [dispatch]);
+
+//   const onLogin = () => {
+//     if (userData.userId && userData.userPwd && userData.userName) {
+//       dispatch(userLoginAction(userData)).then((response: boolean) => {
+//         if (!response) {
+//           setErrorMessage('Please enter valid credentials.');
+//         } else {
+//           router.push(webUrl.pallet);
+//         }
+//       });
+//     } else {
+//       setErrorMessage(messages.requiredSignInField);
+//     }
+//   };
+
+//   const onFieldChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+//     const { name, value } = e.target;
+
+//     setUserData((prevData) => ({
+//       ...prevData,
+//       [name]: value,
+//     }));
+
+//     if (errorMessage) {
+//       setErrorMessage('');
+//     }
+//   };
+
+//   const onFieldKeyUp = (e: React.KeyboardEvent) => {
+//     if (e.key === 'Enter') {
+//       onLogin();
+//     }
+//   };
+
+//   return (
+//     <div className="flex items-center justify-center">
+//       <div className="flex flex-col items-center mt-20 p-6 w-full max-w-md bg-white rounded-lg shadow-lg">
+//         <h5 className="text-xl font-bold text-red-600 mb-2">ARIA Pallet Tracker</h5>
+//         <h5 className="text-lg font-bold text-gray-700 mb-6">Sign in to your account</h5>
+//         <div className="space-y-4 w-full">
+//           <TextField
+//             fullWidth
+//             placeholder="User Id"
+//             name="userId"
+//             value={userData.userId}
+//             onChange={onFieldChange}
+//             onKeyUp={onFieldKeyUp}
+//           />
+//           <TextField
+//             fullWidth
+//             type="password"
+//             placeholder="Password"
+//             name="userPwd"
+//             value={userData.userPwd}
+//             onChange={onFieldChange}
+//             onKeyUp={onFieldKeyUp}
+//           />
+//           <TextField
+//             fullWidth
+//             placeholder="User Name"
+//             name="userName"
+//             value={userData.userName}
+//             onChange={onFieldChange}
+//             onKeyUp={onFieldKeyUp}
+//           />
+//         </div>
+//         {errorMessage && (
+//           <Alert severity="error" className="mt-4 flex items-center">
+//             <IconButton className="mr-2">
+//               {errorMessage}
+//             </IconButton>
+//           </Alert>
+//         )}
+//         <Button
+//           variant="contained"
+//           color="primary"
+//           className="mt-6 w-full py-3 text-lg"
+//           onClick={onLogin}
+//         >
+//           Login
+//         </Button>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default SignIn;
+
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import { useSelector   } from 'react-redux';
-
-import { Button, TextField, IconButton, Alert } from '@mui/material';
+import { useSelector } from 'react-redux';
+import { Button, TextField, Alert } from '@mui/material';
 
 import { useAppDispatch, type RootState } from '../../store';
 import { userLoginAction, unmountUserAction } from './action';
 import { messages, webUrl } from '../../../shared/constants';
 import { initialiseAddToHomeService } from '@/components/add-to-home';
 
-
-
 const SignIn: React.FC = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
-
   const user = useSelector((state: RootState) => state.user);
 
-  const [userData, setUserData] = useState({
+  const [userData, setUserData] = useState<{
+    userId: string;
+    userPwd: string;
+    userName: string;
+  }>({
     userId: '',
     userPwd: '',
     userName: '',
@@ -175,22 +309,25 @@ const SignIn: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
-    const user = localStorage.getItem('user');
-    const name = localStorage.getItem('userName');
+    if (typeof window !== 'undefined') {
+      const user = localStorage.getItem('user');
+      const name = localStorage.getItem('userName');
 
-    setUserData((prevData) => ({
-      ...prevData,
-      userId: user || '',
-      userName: name || '',
-    }));
+      setUserData((prevData) => ({
+        ...prevData,
+        userId: user || '',
+        userName: name || '',
+      }));
 
-    localStorage.clear();
-    dispatch(unmountUserAction());
-    initialiseAddToHomeService();
-  }, [dispatch]);
+      // Clear localStorage and dispatch action after setting user data
+      localStorage.clear();
+      dispatch(unmountUserAction());
+      initialiseAddToHomeService();
+    }
+  }, []);
 
   const onLogin = () => {
-    if (userData.userId && userData.userPwd && userData.userName) {
+    if (userData && userData.userId && userData.userPwd && userData.userName) {
       dispatch(userLoginAction(userData)).then((response: boolean) => {
         if (!response) {
           setErrorMessage('Please enter valid credentials.');
@@ -204,6 +341,8 @@ const SignIn: React.FC = () => {
   };
 
   const onFieldChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e || !e.target)
+      return;
     const { name, value } = e.target;
 
     setUserData((prevData) => ({
@@ -223,7 +362,7 @@ const SignIn: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center justify-center">
+    <div className="flex items-center justify-center min-h-screen">
       <div className="flex flex-col items-center mt-20 p-6 w-full max-w-md bg-white rounded-lg shadow-lg">
         <h5 className="text-xl font-bold text-red-600 mb-2">ARIA Pallet Tracker</h5>
         <h5 className="text-lg font-bold text-gray-700 mb-6">Sign in to your account</h5>
@@ -255,10 +394,8 @@ const SignIn: React.FC = () => {
           />
         </div>
         {errorMessage && (
-          <Alert severity="error" className="mt-4 flex items-center">
-            <IconButton className="mr-2">
-              {errorMessage}
-            </IconButton>
+          <Alert severity="error" className="mt-4">
+            {errorMessage}
           </Alert>
         )}
         <Button
@@ -275,3 +412,4 @@ const SignIn: React.FC = () => {
 };
 
 export default SignIn;
+

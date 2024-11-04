@@ -75,15 +75,15 @@ const VerticalMenu = ({ scrollMenu }: Props) => {
         <MenuItem href='/pallet' icon={<i className='ri-palette-line' />}>
           Pallets
         </MenuItem>
-        <MenuItem href='/new_pallets' icon={<i className='ri-palette-fill' />}>
+        {/* <MenuItem href='/new_pallets' icon={<i className='ri-palette-fill' />}>
           New Pallets
-        </MenuItem>
+        </MenuItem> */}
         <MenuItem href='/estore' icon={<i className='ri-store-3-fill' />}>
           Estore
         </MenuItem>
-        <MenuItem href='/product' icon={<i className='ri-product-hunt-line' />}>
+        {/* <MenuItem href='/product' icon={<i className='ri-product-hunt-line' />}>
           Products
-        </MenuItem>
+        </MenuItem> */}
         <MenuItem href='/shipper_master' icon={<i className='ri-ship-2-fill' />}>
           Shipper Master
         </MenuItem>
@@ -99,7 +99,7 @@ const VerticalMenu = ({ scrollMenu }: Props) => {
         <MenuItem href='/purchase_order' icon={<i className='ri-briefcase-line' />}>
           Purchase Order
         </MenuItem>
-        <MenuItem href='/receive-po' icon={<i className='ri-receipt-line' />}>
+        {/* <MenuItem href='/receive-po' icon={<i className='ri-receipt-line' />}>
           Receive PO
         </MenuItem>
         <MenuItem href='/receive_po_new' icon={<i className='ri-briefcase-fill' />}>
@@ -107,7 +107,7 @@ const VerticalMenu = ({ scrollMenu }: Props) => {
         </MenuItem>
         <MenuItem href='/receive_po_odoo' icon={<i className='ri-receipt-line' />}>
           Receive PO Odoo
-        </MenuItem>
+        </MenuItem> */}
         <MenuItem href='/distribution' icon={<i className='ri-receipt-line' />}>
           Distribution
         </MenuItem>

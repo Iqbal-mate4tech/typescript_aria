@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import {
   Button, Card, CardContent, CardHeader, TextField, InputLabel, Grid, Fab, Typography, Box, CardActions
 } from '@mui/material';
-import {  useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import AppHeader from '@/components/app-header';
 import {
@@ -18,31 +18,47 @@ import { getUserStore } from '@/shared/common';
 import { AppAlert } from '@/components/app-alert';
 import POQuantityModal from '@/components/po-quantity-modal';
 import { useAppDispatch, type RootState } from '../../store';
+import useAuth from '@/components/withAuth';
 
 
 const PurchaseOrder: React.FC = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const isAuthenticated = useAuth();
 
-  const [detailsToShowIndex, setDetailsToShowIndex] = useState<number | undefined>(undefined);
-  const [itemDetailsToShowIndex, setItemDetailsToShowIndex] = useState<number | undefined>(undefined);
-  const [pageNo, setPageNo] = useState(1);
-  const [searchData, setSearchData] = useState({ modal: {} });
-  const [alertMessage, setAlertMessage] = useState('');
-  const [showAlert, setShowAlert] = useState(false);
-  const [comment, setComment] = useState('');
-  const [qtyReceived, setQtyReceived] = useState('');
-  const [qtyReceivedAlready, setQtyReceivedAlready] = useState('');
-  const [showModal, setShowModal] = useState(false);
-  const [qtyOrdered, setQtyOrdered] = useState(false);
-  const [poId, setPOId] = useState(false);
-  const [sku, setSKU] = useState(false);
+
+
+
+
+  const [detailsToShowIndex, setDetailsToShowIndex] = useState<any>(undefined);
+  const [itemDetailsToShowIndex, setItemDetailsToShowIndex] = useState<any>(undefined);
+  const [pageNo, setPageNo] = useState<any>(1);
+  const [searchData, setSearchData] = useState<any>({ modal: {} });
+  const [alertMessage, setAlertMessage] = useState<any>('');
+  const [showAlert, setShowAlert] = useState<any>(false);
+  const [comment, setComment] = useState<any>('');
+  const [qtyReceived, setQtyReceived] = useState<any>('');
+  const [qtyReceivedAlready, setQtyReceivedAlready] = useState<any>('');
+  const [showModal, setShowModal] = useState<any>(false);
+  const [qtyOrdered, setQtyOrdered] = useState<any>(false);
+  const [poId, setPOId] = useState<any>(false);
+  const [sku, setSKU] = useState<any>(false);
+  const [userName, setUserName] = useState<any>(null);
 
   const po = useSelector((state: RootState) => state.purchaseOrder.po);
   const poItems = useSelector((state: RootState) => state.purchaseOrder.poItems);
   const poStore = useSelector((state: RootState) => state.purchaseOrder.poStore);
   const userStore = getUserStore();
   const poStatus = useSelector((state: RootState) => state.purchaseOrder.poStatus);
+
+  useEffect(() => {
+    // Check if running on the client to access `localStorage`
+    if (typeof window !== 'undefined') {
+      const storedUserName = localStorage.getItem('userName') || '';
+
+      setUserName(storedUserName);
+    }
+  }, []);
 
   useEffect(() => {
     dispatch(poMasterDataAction());
@@ -98,7 +114,7 @@ const PurchaseOrder: React.FC = () => {
     setPageNo(1);
   };
 
-  const onRowClick = (index: number, id: number, skipIndexing = false) => {
+  const onRowClick = (index: number, id: any, skipIndexing = false) => {
     if (!skipIndexing && index === detailsToShowIndex) {
       setDetailsToShowIndex(undefined);
     } else {
@@ -114,12 +130,12 @@ const PurchaseOrder: React.FC = () => {
     setItemDetailsToShowIndex(index === itemDetailsToShowIndex ? undefined : index);
   };
 
-  const poUploadClick = (e: React.MouseEvent, poId: number) => {
+  const poUploadClick = (e: React.MouseEvent, poId: any) => {
     e.stopPropagation();
 
     const data = {
       POID: poId,
-      ReceivedBy: localStorage.getItem('userName'),
+      ReceivedBy: userName,
     };
 
     dispatch(uploadPOAction(data)).then((response: any) => {
@@ -150,15 +166,15 @@ const PurchaseOrder: React.FC = () => {
       SupplierSku: sku,
       QuantityReceived: qtyReceived,
       Comment: comment,
-      Variance: parseInt(qtyOrdered as string) - parseInt(qtyReceived as string),
-      ReceivedBy: localStorage.getItem('userName'),
+      Variance: parseInt(qtyOrdered) - parseInt(qtyReceived),
+      ReceivedBy: userName,
     };
 
     if (data.POID && data.SupplierSku && data.QuantityReceived) {
       dispatch(receivePOAction(data)).then((response: any) => {
         if (response) {
           setShowModal(false);
-          onRowClick(detailsToShowIndex as number, data.POID as number, true);
+          onRowClick(detailsToShowIndex, data.POID, true);
         } else {
           setAlertMessage('Updation failed.');
           setShowAlert(true);
@@ -173,9 +189,13 @@ const PurchaseOrder: React.FC = () => {
   const setStatus = (value: any) => {
     if (parseInt(value.QtyOrdered) === parseInt(value.QtyReceived)) return 'received-status';
     if (parseInt(value.QtyReceived) === 0) return 'not-received-status';
-    
-return 'variance-status';
+
+    return 'variance-status';
   };
+
+  if (!isAuthenticated) {
+    return null; // Avoid rendering if not authenticated
+  }
 
   const poItemsData = () => {
     return poItems && poItems[0] && poItems[0].length > 0 ? (
@@ -200,7 +220,7 @@ return 'variance-status';
                 <Typography variant="h6">{value.SupplierSku}</Typography>
               </Grid>
               <Grid item xs={6} textAlign="right">
-                <Fab size="small"  className={`status-fab ${setStatus(value)}`} sx={{
+                <Fab size="small" className={`status-fab ${setStatus(value)}`} sx={{
                   backgroundColor: setStatusColor(value),
                   color: '#fff'
                 }} />
@@ -356,7 +376,7 @@ return 'variance-status';
           <CardHeader title="Search Criteria" />
           <CardContent className="search-field-section">
             <Grid container spacing={2}>
-              <Grid item md={4}>
+              <Grid item md={2} xs={6}>
                 <InputLabel>PO Id</InputLabel>
                 <TextField
                   name="searchPOId"
@@ -365,7 +385,7 @@ return 'variance-status';
                   fullWidth
                 />
               </Grid>
-              <Grid item md={4}>
+              <Grid item md={3} xs={6}>
                 <InputLabel>Store</InputLabel>
                 <SingleSelect
                   name="searchStore"
@@ -377,7 +397,7 @@ return 'variance-status';
                   value={userStore || searchData.searchStore}
                 />
               </Grid>
-              <Grid item md={4}>
+              <Grid item md={3} xs={6}>
                 <InputLabel>Status</InputLabel>
                 <SingleSelect
                   name="searchStatus"
@@ -388,9 +408,7 @@ return 'variance-status';
                   value={searchData.searchStatus}
                 />
               </Grid>
-            </Grid>
-            <Grid container spacing={2} sx={{ marginTop: 2 }}>
-              <Grid item md={4}>
+              <Grid item md={2} xs={6}>
                 <InputLabel>Supplier Invoice No.</InputLabel>
                 <TextField
                   name="searchSINo"
@@ -399,7 +417,7 @@ return 'variance-status';
                   fullWidth
                 />
               </Grid>
-              <Grid item md={4}>
+              <Grid item md={2} xs={6}>
                 <InputLabel>Barcode</InputLabel>
                 <TextField
                   name="barcode"
@@ -409,39 +427,45 @@ return 'variance-status';
                 />
               </Grid>
             </Grid>
+            <Grid container spacing={2} sx={{ marginTop: 2, justifyContent: 'flex-end' }}>
+              <Grid item md={3} xs={6}>
+                <Button variant="contained" onClick={onSearchClick}
+                  size="large" style={{ padding: '15px 0', marginTop: '17px' }} fullWidth>
+                  Search
+                </Button>
+              </Grid>
+              <Grid item md={3} xs={6}>
+                <Button variant="contained" onClick={onClearClick}
+                  size="large" style={{ padding: '15px 0', marginTop: '17px' }} fullWidth>
+                  Clear
+                </Button>
+              </Grid>
+            </Grid>
           </CardContent>
-          <CardActions sx={{ padding: 2, justifyContent: 'space-between' }}>
-            <Button variant="contained" size="large" onClick={onSearchClick}>
-              Search
-            </Button>
-            <Button variant="contained" size="large" onClick={onClearClick}>
-              Clear
-            </Button>
-          </CardActions>
         </Card>
 
         <Card className="search-result pallet-items" sx={{ marginTop: 2, marginBottom: 4 }}>
           <CardHeader title="Search Result" />
           <CardContent>
             <Grid container spacing={2}>
-              <Grid item xs={2}>
-                <Fab size="small"  sx={{ backgroundColor: '#4caf50', color: '#fff' }} />
+              <Grid item md={2.5} xs={4}>
+                <Fab size="small" sx={{ backgroundColor: '#4caf50', color: '#fff' }} />
                 <Typography variant="body1" sx={{ marginLeft: 2 }}>Received</Typography>
               </Grid>
-              <Grid item xs={2}>
-                <Fab size="small"  sx={{ backgroundColor: '#f44336', color: '#fff' }} />
+              <Grid item md={2.5} xs={4}>
+                <Fab size="small" sx={{ backgroundColor: '#f44336', color: '#fff' }} />
                 <Typography variant="body1" sx={{ marginLeft: 2 }}>Not Received</Typography>
               </Grid>
-              <Grid item xs={2}>
-                <Fab size="small"  sx={{ backgroundColor: '#ff9800', color: '#fff' }} />
+              <Grid item md={2.5} xs={4}>
+                <Fab size="small" sx={{ backgroundColor: '#ff9800', color: '#fff' }} />
                 <Typography variant="body1" sx={{ marginLeft: 2 }}>Variance</Typography>
               </Grid>
-              <Grid item xs={2}>
-                <Fab size="small"  sx={{ backgroundColor: '#2196f3', color: '#fff' }} />
+              <Grid item md={2.5} xs={4}>
+                <Fab size="small" sx={{ backgroundColor: '#2196f3', color: '#fff' }} />
                 <Typography variant="body1" sx={{ marginLeft: 2 }}>Uploaded</Typography>
               </Grid>
-              <Grid item xs={2}>
-                <Fab size="small"  sx={{ backgroundColor: '#9c27b0', color: '#fff' }} />
+              <Grid item md={2} xs={4}>
+                <Fab size="small" sx={{ backgroundColor: '#9c27b0', color: '#fff' }} />
                 <Typography variant="body1" sx={{ marginLeft: 2 }}>Manual</Typography>
               </Grid>
             </Grid>

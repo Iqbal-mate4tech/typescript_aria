@@ -1,101 +1,77 @@
+
+
+// src/container/user/reducer.ts
+
 import { actionTypes } from './action';
 
-/** State Interface */
-interface UserState {
-    loading: boolean;
-    data: any[]; // Replace `any[]` with a more specific type if known
-    error: string | null;
-    showLoader: string[];
-    users?: any[]; // Replace `any[]` with a more specific type if known
-    userTypes?: any[]; // Replace `any[]` with a more specific type if known
-}
+/** TypeScript types for the state */
+// interface UserState {
+//   loading: boolean;
+//   data: any[];
+//   error: string | null;
+//   showLoader: string[];
+//   users?: any;
+//   userTypes?: any;
+// }
 
 /** Initial state */
-const initialState: UserState = {
-    loading: false,
-    data: [],
-    error: null,
-    showLoader: [],
+const initialState: any = {
+  loading: false,
+  data: [],
+  error: null,
+  showLoader: [],
 };
 
-/** Action Interfaces */
-interface UserLoginRequestAction {
-    type: typeof actionTypes.USER_LOGIN_REQUEST;
+/** TypeScript type for actions */
+interface AppAction {
+  type: string;
+  payload?: any;
 }
 
-interface ShowLoaderAction {
-    type: typeof actionTypes.SHOW_LOADER;
-    payload: string;
-}
+/** Reducer function */
+const userReducer = (state = initialState, action: AppAction) => {
+  const { type, payload } = action;
 
-interface StopLoaderAction {
-    type: typeof actionTypes.STOP_LOADER;
-    payload: string;
-}
+  switch (type) {
+    case actionTypes.USER_LOGIN_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
 
-interface UnmountUserAction {
-    type: typeof actionTypes.UNMOUNT_USER;
-}
+    case actionTypes.SHOW_LOADER:
+      return {
+        ...state,
+        showLoader: [...state.showLoader, payload],
+      };
 
-interface UsersReceivedAction {
-    type: typeof actionTypes.USERS_RECEIVED;
-    payload: any[]; // Replace `any[]` with the specific user type if known
-}
+    case actionTypes.STOP_LOADER:
+      return {
+        ...state,
+        showLoader: state.showLoader.filter((value:any) => value !== payload),
+      };
 
-interface UserTypeReceivedAction {
-    type: typeof actionTypes.USER_TYPE_RECEIVED;
-    payload: any[]; // Replace `any[]` with the specific user type if known
-}
+    case actionTypes.UNMOUNT_USER:
+      return {
+        ...initialState,
+      };
 
-/** Combined Action Types */
-type UserActionTypes =
-    | UserLoginRequestAction
-    | ShowLoaderAction
-    | StopLoaderAction
-    | UnmountUserAction
-    | UsersReceivedAction
-    | UserTypeReceivedAction;
+    case actionTypes.USERS_RECEIVED:
+      return {
+        ...state,
+        users: payload,
+      };
 
-/** Reducer */
-export default (state = initialState, action: UserActionTypes): UserState => {
-    switch (action.type) {
-        case actionTypes.USER_LOGIN_REQUEST:
-            return {
-                ...state,
-                loading: true,
-                error: null,
-            };
+    case actionTypes.USER_TYPE_RECEIVED:
+      return {
+        ...state,
+        userTypes: payload,
+      };
 
-        case actionTypes.SHOW_LOADER:
-            return {
-                ...state,
-                showLoader: [...state.showLoader, action.payload],
-            };
-
-        case actionTypes.STOP_LOADER:
-            return {
-                ...state,
-                showLoader: state.showLoader.filter((value) => value !== action.payload),
-            };
-
-        case actionTypes.UNMOUNT_USER:
-            return {
-                ...initialState,
-            };
-
-        case actionTypes.USERS_RECEIVED:
-            return {
-                ...state,
-                users: action.payload,
-            };
-
-        case actionTypes.USER_TYPE_RECEIVED:
-            return {
-                ...state,
-                userTypes: action.payload,
-            };
-
-        default:
-            return state;
-    }
+    default:
+      return state;
+  }
 };
+
+export default userReducer;

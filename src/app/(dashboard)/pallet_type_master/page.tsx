@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 
 import { useRouter } from "next/navigation";
 
-import {  useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 import { IconButton, Card, CardContent, Typography, Grid, Tooltip, Box, Container, Snackbar, Alert } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
@@ -11,7 +11,7 @@ import { Delete, Edit } from "@mui/icons-material";
 import { useAppDispatch, type RootState } from "@/app/store";
 import AppHeader from "@/components/app-header";
 import MasterModal from "@/components/master-modal";
-import {AppAlert} from "@/components/app-alert";
+import { AppAlert } from "@/components/app-alert";
 import { palletTypesAction } from "../pallet/action";
 import { deletePalletTypeAction, addUpdatePalletTypeAction } from "../../action";
 import useAuth from "@components/withAuth";
@@ -20,9 +20,11 @@ const PalletTypeMaster: React.FC = () => {
   const isAuthenticated = useAuth();
   const router = useRouter();
   const dispatch = useAppDispatch();
+
+
   const types = useSelector((state: RootState) => state.pallet.palletTypes);
 
-  const [id, setId] = useState<number | undefined>(undefined);
+  const [id, setId] = useState<any>(undefined);
   const [name, setName] = useState<string>("");
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showAlert, setShowAlert] = useState<boolean>(false);
@@ -34,10 +36,11 @@ const PalletTypeMaster: React.FC = () => {
   const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
 
   useEffect(() => {
-    if (isAuthenticated) {
-      dispatch(palletTypesAction());
-    }
-  }, [isAuthenticated, dispatch]);
+    // if (isAuthenticated) {
+    dispatch(palletTypesAction());
+
+    // }
+  }, []);
 
   const onAddClick = () => {
     setShowModal(true);
@@ -50,7 +53,7 @@ const PalletTypeMaster: React.FC = () => {
   };
 
   const onDoneClick = async () => {
-    const request = { type: name };
+    const request: any = { type: name };
 
     if (id) request.id = id;
 
@@ -58,6 +61,8 @@ const PalletTypeMaster: React.FC = () => {
 
     if (response) {
       closeModal();
+      setId(undefined);
+      setName('');
       dispatch(palletTypesAction());
       showFlashMessage("Record saved successfully!", "success");
     } else {
@@ -71,6 +76,8 @@ const PalletTypeMaster: React.FC = () => {
 
     if (response) {
       setShowConfirm(false);
+      setId(undefined);
+      setName('');
       dispatch(palletTypesAction());
       showFlashMessage("Record deleted successfully!", "success");
     } else {
@@ -84,6 +91,8 @@ const PalletTypeMaster: React.FC = () => {
     setFlashSeverity(severity);
     setOpenSnackbar(true);
   };
+
+  if (!isAuthenticated) return null; // Prevent rendering if not authenticated
 
   const renderCards = () => {
     return types && Array.isArray(types) ? (
@@ -99,7 +108,8 @@ const PalletTypeMaster: React.FC = () => {
                 <Tooltip title="Edit">
                   <IconButton
                     color="primary"
-                    onClick={() => {
+                    onClick={(e: any) => {
+                      e.stopPropagation();
                       setShowModal(true);
                       setId(value.id);
                       setName(value.type);
@@ -111,7 +121,8 @@ const PalletTypeMaster: React.FC = () => {
                 <Tooltip title="Delete">
                   <IconButton
                     color="error"
-                    onClick={() => {
+                    onClick={(e: any) => {
+                      e.stopPropagation();
                       setShowConfirm(true);
                       setAlertMessage("Are you sure to delete?");
                       setId(value.id);
@@ -132,7 +143,7 @@ const PalletTypeMaster: React.FC = () => {
     );
   };
 
-  if (!isAuthenticated) return null; // Prevent rendering if not authenticated
+
 
   return (
     <Container>
@@ -160,7 +171,7 @@ const PalletTypeMaster: React.FC = () => {
         btnCancelText="Cancel"
         btnOkText="Yes"
         okClick={onDeleteClick}
-        cancelClick={() => setShowConfirm(false)}
+        cancelClick={() => { setShowConfirm(false); setId(0); }}
       />
       <AppAlert
         showAlert={showAlert}

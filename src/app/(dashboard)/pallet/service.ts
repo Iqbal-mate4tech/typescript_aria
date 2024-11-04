@@ -4,14 +4,15 @@ import { stringformat } from '../../../shared/common';
 
 export function palletStatus(): Promise<any> {
     const userType = localStorage.getItem('userType');
-    let uri;
+    let uri: any;
 
-    if (userType === 'warehouse')
+    if (userType === 'warehouse') {
         uri = apiUrl.palletWarehouseStatus;
-    else if (userType === 'store')
+    } else if (userType === 'store') {
         uri = apiUrl.palletStoreStatus;
-    else
+    } else {
         uri = apiUrl.palletStatus;
+    }
 
     return doGetRequest(uri);
 }
@@ -28,7 +29,7 @@ export function pallets(data: any): Promise<any> {
     return doPostRequest(apiUrl.pallets, data);
 }
 
-export function palletItemsById(id: string | number): Promise<any> {
+export function palletItemsById(id: any): Promise<any> {
     return doGetRequest(stringformat(apiUrl.palletItemsById, [id]));
 }
 
@@ -52,11 +53,11 @@ export function savePalletItem(data: any): Promise<any> {
     return doPostRequest(apiUrl.addPalletItem, data);
 }
 
-export function deletePallet(id: string | number): Promise<any> {
+export function deletePallet(id: any): Promise<any> {
     return doGetRequest(stringformat(apiUrl.deletePallet, [id]));
 }
 
-export function deletePalletItem(id: string | number): Promise<any> {
+export function deletePalletItem(id: any): Promise<any> {
     return doGetRequest(stringformat(apiUrl.deletePalletItem, [id]));
 }
 
@@ -76,11 +77,38 @@ export function updatePalletShippingStatus(data: any): Promise<any> {
     return doPostRequest(apiUrl.updatePalletShippingStatus, data);
 }
 
-export function getItemDescription(data: string | number): Promise<any> {
-    return doOdooGetRequest(stringformat(apiUrl.getDescription, [data]));
+export function getItemDescription(barcode: any): Promise<any> {
+    return doOdooGetRequest(stringformat(apiUrl.getDescription, [barcode]));
 }
 
-export function getProdcutQuanityDetails(data: string | number): Promise<any> {
+export function getDIDdescription(did_reference: any, barcode: any): Promise<any> {
+    const url = stringformat(apiUrl.getDIDdescription, [did_reference, barcode]);
+
+    
+return doOdooGetRequest(url);
+}
+
+export function getITOdescription_new(ito_reference: any, barcode: any): Promise<any> {
+    const url = stringformat(apiUrl.getITOdescription_new, [ito_reference, barcode]);
+
+    
+return doOdooGetRequest(url);
+}
+
+export function getdidnumbervalid(did_number: any, store_id: any): Promise<any> {
+    return doOdooGetRequest(stringformat(apiUrl.getDiDnumbervalid, [did_number, store_id]));
+}
+
+export function getitonumbervalid(ito_number: any): Promise<any> {
+    return doOdooGetRequest(stringformat(apiUrl.getITOnumbervalid, [ito_number]));
+
+}
+
+export function getstorepo(store_id:any): Promise<any>{
+    return doOdooGetRequest(stringformat(apiUrl.getStorePO, [store_id]));
+}
+
+export function getProdcutQuanityDetails(data: any): Promise<any> {
     return doOdooGetRequest(stringformat(apiUrl.getProductQuantityDetails, [data]));
 }
 
